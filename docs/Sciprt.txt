@@ -1,0 +1,65 @@
+Discord MeetClip with facecam: {
+    Bhavya: Guys Guys Guys Humara Code faat rha h Pura ka pura.
+    Sarva: Shi mee kidar faat rha bata.
+    Tanya: yee toh kahi backend mee dikha rha h kuch gadbadi h.
+    Sarva: Sujal kaha h? Backend uska Part Thaa n kidar gya voh ??? jaldi bulo usse?
+    Bhavya: Ruko mee call krta hu usko. 
+    (ringing and then in 3rd try sujal picks the call)
+    Bhavya: Aree bhai kidr h yaha pura code faat gya yaaar.
+    Sujal: Haaa bhaiii kya hua bol bol/
+    Bhavya: Abeee pura code faat rha h backend ka kidaaar h.
+    Sujal: Mee toh Vrindavan Ghumnee aaya hua hu. (this dialog with clip of sujal in public in vrindavan talking of the phone).
+    Bhavya: Areee yaar 
+}
+
+(The above scene is paused and got cut)
+(Full screen solo clips start here)
+Tanyaa: Toh aapki badi company esa problem face naa kree isliye humne banaya h...
+Sarva: CONCH Ek esa platform jaha Hum sirf yee nhi batatee ki code kaha fata h...
+Bhavya: Hum yee batatee h ki Ab uss fate huee code ko kese kaun aur kaab tk handle krega
+
+Sujal: Toh ab suno ki CONCH work kese kreta h 
+Sarva: Sbse Pehle apko humara npm package install krke aapne program mee use krna h 
+Tanyaa: Jisse Saari errors catch hoyengi aur CONCH ko pta chalega ki Ky dikat aa rhi h aur kaha aa rhi h
+Bhavya: Uske baad sidha ek notification jayega Manager roles ko Joo ki team banayenge Uss bug yaa error ko fix krne kee liye 
+Sarva: Team banatee hii Puri team ko notification jayega ki Yee bug h apko usme yee solve krna h 
+Tanyaa: Uski kee saath ek timline create hogi joo ki humara ai krega kii konsa kaam kaab tk krna h 
+Sujal: Voh timeline ko obviously manager change kr skta hu team ko access dee diya toh uhh.....
+
+Bhavya: Aur yee sbke chaalte humara AI uss error ko analyse krke uska level nikalega 
+Tanya: jese kii Low medium yaa High
+Sarva: low walee mee aa skte h image not visible, or some ui bugs 
+Bhavya: Medium mee koi basic console error aagya ya kuch 
+Tanya: Aur high mee Payement crash, Login failed etc.
+Sujal: Inn messages kee hisab see hum users ko messsage show krenge like Payment under maintainence visit after 10 mins 
+
+Bhavya: Yee saab kee Hone kee baad Website normally work krne lagegi aur saab error messages haat jayenge.
+Sarva: Aur end mee Ek potmortam report tayar hogi joki future issues and Fixing report kee kaam aayegi 
+Tanyaa: Ha kyu ki manager ko batana bhi toh jaruri h n kii kaam hogya.
+Sujal: Btw voh bhi CONCH kr dega.
+Tanyaa: Really?
+Bhavya: have postmortem ready hotee hii manager ko notification chala jayega 
+Sarva: another thing yee sara Ai wala work hum loog Workers ka use kr ke krr rhe honge matlab aap humari website leave krke chalee bhi gye toh koi issue nhi report banti rhegi
+
+Bhavya: Toh genrally agar mee sb kuch short mee bataun toh 
+Hum kuch esa bana rhe h joo aapke aap mee bugs dhundega 
+report banayega 
+team banvakar usse solve karayega 
+
+Sarva: no more late reports no more crashes Sb kuch smooth chalega 
+Tanyaa: Ha humne mana ki Sentry jese aur tools bhi h market mee bugs pakadne kee liye but..
+Sujal: Voh sirf bugs pakadte h aur hum unhee solve krne ka enviroment dete h
+
+Sarva: May be hum looog Future mee isme updates laayen Jese ki 
+Tanyaa: Apka code Ai nee bhi solve krdia. Ab team ko sirf review dena h.
+
+Bhavya: So this was our idea. I am bhavya
+Suajal: I am sujal 
+Sarva: I am Sarva 
+Tanyaa: And i am Tanyaa 
+
+Bhavya: and this was our idea for the sheryians coding school hackathon jaha hum project nhi product bana rhe h 
+Tanyaa: So this is Team singning off.
+Bhavya: haa Humari Team ka name hiii team h. Thank you everyone for listning./
+(some pose or something jisme huum charo same frame mee aa jaaye (may me a bye sign or salute type something)).
+(Conch Comming soon Screen)
