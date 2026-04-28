@@ -12,54 +12,42 @@ Discord MeetClip with facecam: {
     Bhavya: Areee yaar 
 }
 
-(The above scene is paused and got cut)
-(Full screen solo clips start here)
-Tanyaa: Toh aapki badi company esa problem face naa kree isliye humne banaya h...
-Sarva: CONCH Ek esa platform jaha Hum sirf yee nhi batatee ki code kaha fata h...
-Bhavya: Hum yee batatee h ki Ab uss fate huee code ko kese kaun aur kaab tk handle krega
 
-Sujal: Toh ab suno ki CONCH work kese kreta h 
-Sarva: Sbse Pehle apko humara npm package install krke aapne program mee use krna h 
-Tanyaa: Jisse Saari errors catch hoyengi aur CONCH ko pta chalega ki Ky dikat aa rhi h aur kaha aa rhi h
-Bhavya: Uske baad sidha ek notification jayega Manager roles ko Joo ki team banayenge Uss bug yaa error ko fix krne kee liye 
-Sarva: Team banatee hii Puri team ko notification jayega ki Yee bug h apko usme yee solve krna h 
-Tanyaa: Uski kee saath ek timline create hogi joo ki humara ai krega kii konsa kaam kaab tk krna h 
-Sujal: Voh timeline ko obviously manager change kr skta hu team ko access dee diya toh uhh.....
 
-Bhavya: Aur yee sbke chaalte humara AI uss error ko analyse krke uska level nikalega 
-Tanya: jese kii Low medium yaa High
-Sarva: low walee mee aa skte h image not visible, or some ui bugs 
-Bhavya: Medium mee koi basic console error aagya ya kuch 
-Tanya: Aur high mee Payement crash, Login failed etc.
-Sujal: Inn messages kee hisab see hum users ko messsage show krenge like Payment under maintainence visit after 10 mins 
+Do from here: 
+Bhavya: Toh sidha mudee pee ata hu Yee dikat bahutoo kee saaath hoti pehle toh code fata voh kabhi kabhi late pta chalta h ki code fata h 
+user ko dikkat hoo rhi h aur kabhi kabhi usko dhundnee mee hii dikat hoo jati h pta hiii nhi chalta ky hua h 
+Sarva: Toh isliye humne banaya h CONCH ek esa application jaha hum yee toh batate hiii h ki code kaha fata h + usko solve krne ke liyee apko team bhi banakr dete h 
+Sujal: Solve krne see leke uske baad ki postmortam report taak hum loog hain aapke saath.
+Tanyaa: Kyu ki hum Nhi chahte aapke users ko dikaaaten hoo 
 
-Bhavya: Yee saab kee Hone kee baad Website normally work krne lagegi aur saab error messages haat jayenge.
-Sarva: Aur end mee Ek potmortam report tayar hogi joki future issues and Fixing report kee kaam aayegi 
-Tanyaa: Ha kyu ki manager ko batana bhi toh jaruri h n kii kaam hogya.
-Sujal: Btw voh bhi CONCH kr dega.
-Tanyaa: Really?
-Bhavya: have postmortem ready hotee hii manager ko notification chala jayega 
-Sarva: another thing yee sara Ai wala work hum loog Workers ka use kr ke krr rhe honge matlab aap humari website leave krke chalee bhi gye toh koi issue nhi report banti rhegi
+Bhavya: So geneally how CONCH works. 
+sbse pehle aapko humara npm package install krna rhega. aur usme ek CONCH class leke aap apne project mee usko initialize kroge 
+then aap haar jaha humari dii hui classes see bhi error handling kroge jese humko pta chalega ki error kaha see h chahe backend hoo yaa frontend 
+aur humara system uske error stack ko trace krke root cause nikalega 
+Sarva: Error kee trace hotee hi humaree system see manager ko ek notification jayega ki Idar dikat h team banano.
+Sujal: manager predefined teams bhi use kr skta h yaa toh fir on the spot new team bana skta h 
+Tanyaa: Error solve krte time public mee uska status dikahaya jayega 
 
-Bhavya: Toh genrally agar mee sb kuch short mee bataun toh 
-Hum kuch esa bana rhe h joo aapke aap mee bugs dhundega 
-report banayega 
-team banvakar usse solve karayega 
+Bhavya: Problem dikhane ka bhi ek alag tarika hoga hum problem ko identify krenge uska level nigalenge aur ek timeline ready hogi ki konsi cheej kaab tk krni h 
+uske baad level kee according message show hoga hihg level paar proper mesages honge aur low level jese jii kisi image ka load naa hona isse jyada fark nhi pta 
+toh isse low level paar rkhenge aur kuch bhi public nhi hoga 
+Sujal: Fir sabhi developers error solve krenge aur status update krte jayenge.
+Sarva: But sbse bada sawaal h ki agar koi sujal jese firse ghumnee chala gya toh ?
 
-Sarva: no more late reports no more crashes Sb kuch smooth chalega 
-Tanyaa: Ha humne mana ki Sentry jese aur tools bhi h market mee bugs pakadne kee liye but..
-Sujal: Voh sirf bugs pakadte h aur hum unhee solve krne ka enviroment dete h
+Bhavya: Uss case hum use krenge huara Conch ai joo ki aapko suggest krega ki particular problem ko solve kese kiyaa jaay jisse koi bhi kabhi bhi 
+apne mobile see usse review kr skta h aur koi aur uske baadle baas same changes krde taaki kahi see bhi solution laa liyaa jaay 
+Sujal: Iss puree process kee time paar logs baan rhe honge 
+Sarva: Aur at the end hum unhee connect krke humare CONCH ai see proper POSTMORTEM report banva lenge 
 
-Sarva: May be hum looog Future mee isme updates laayen Jese ki 
-Tanyaa: Apka code Ai nee bhi solve krdia. Ab team ko sirf review dena h.
+Bhavya: Aur CONCH esa nhi h ki jaha aapne detect krna lagaya vahi track hoo console mee aane walii haar error ko CONCH solve krega. TAKI kahi bhi minute problem bhi naa aaye.
+Tanyaa: Aur iska future scope ky rhega 
 
-Bhavya: So this was our idea. I am bhavya
-Suajal: I am sujal 
-Sarva: I am Sarva 
-Tanyaa: And i am Tanyaa 
+Bhavya: TOh future mee hum isme alag alag programing languages ko support karayenge jese python java angular PHP etc. Taki sabhi developers ka jivan asan kiya jaay 
+Sujal: That's all for today This is sujal 
+Sarva: Myself Sarva 
+Tanyaa: and me Tanyaa 
+Sujal: SIgning of with team
 
-Bhavya: and this was our idea for the sheryians coding school hackathon jaha hum project nhi product bana rhe h 
-Tanyaa: So this is Team singning off.
-Bhavya: haa Humari Team ka name hiii team h. Thank you everyone for listning./
-(some pose or something jisme huum charo same frame mee aa jaaye (may me a bye sign or salute type something)).
-(Conch Comming soon Screen)
+BHavya: haa mee bata dun humari team ka naam hii team h. any ways byeee. aur CONCH use krna bhulna maat releasing soooon.
+(end screen)
