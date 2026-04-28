@@ -1,1 +1,1 @@
-# This is CONCH and we are builgi
+# This is CONCH and we are building it.
