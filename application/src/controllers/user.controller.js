@@ -9,7 +9,7 @@ import {
 } from "@/utils/generateJWT.utils.js";
 import { sanitizeUser } from "@/utils/sanitize.util.js";
 import getGoogleOAuthTokens, { verifyGoogleIdToken } from "@/utils/getGoogleOAuth.util.js";
-import { NextResponse } from "next/server.js";
+import { NextResponse } from "next/server";
 
 import {
     sendVerificationEmail,
@@ -31,10 +31,7 @@ function setAuthCookie(response, token) {
 }
 
 function clearAuthCookie(response) {
-    response.cookies.set("token", "", {
-        ...AUTH_COOKIE_OPTIONS,
-        maxAge: 0,
-    });
+    response.cookies.delete("token");
 }
 
 function issueJwt(userId) {
@@ -67,6 +64,16 @@ async function decodingUser(req) {
 export async function handleStatus(req) {
     const userGot = await decodingUser(req);
 
+    if (!userGot) {
+        return NextResponse.json(
+            {
+                success: false,
+                message: "User is not authenticated",
+                data: { user: null },
+            },
+            { status: 401 }
+        );
+    }
 
     const resData = {
         success: true,
@@ -159,6 +166,9 @@ export async function handleRegister(req) {
 // ---------------- SEND VERIFICATION ----------------
 export async function handleSendVerification(req) {
     const user = await decodingUser(req);
+    if (!user) {
+        throw new ExpressError(401, "User is not authenticated");
+    }
 
     const existingToken = await Token.findOne({
         user_id: user._id,
@@ -197,6 +207,9 @@ export async function handleSendVerification(req) {
 export async function handleVerifyEmail(req) {
     const { code } = await req.json();
     const user = await decodingUser(req);
+    if (!user) {
+        throw new ExpressError(401, "User is not authenticated");
+    }
 
     const token = await Token.findOne({
         value: code,

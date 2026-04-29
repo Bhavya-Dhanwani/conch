@@ -1,9 +1,9 @@
-import { connectDB } from "@/config/db.config";
+import { NextResponse } from "next/server";
 
-export async function middleware(req) {
-    await connectDB();
+export function middleware() {
+    return NextResponse.next();
 }
 
 export const config = {
-    matcher: "/api/:path*"
-}   
+    matcher: "/api/:path*",
+};
