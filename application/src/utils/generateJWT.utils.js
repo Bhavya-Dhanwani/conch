@@ -30,12 +30,10 @@ export function decodeJWT(token) {
 
 export function generateVerificationToken() {
     const otp = crypto.randomInt(100000, 1000000);
-    console.log(otp)
     return otp.toString();
 }
 
 export function generateResetPasswordToken() {
     const verifyToken = crypto.randomBytes(20).toString("hex");
-    console.log(verifyToken);
     return verifyToken
 }

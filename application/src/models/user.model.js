@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -20,7 +20,14 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function () {
+            return !this.googleId;
+        },
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true,
     },
     isVerified: {
         type: Boolean,
@@ -34,7 +41,7 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
+    if (!this.isModified("password") || !this.password) return next();
 
     try {
         const saltRounds = Number(process.env.SALT_ROUNDS) || 10;
@@ -47,6 +54,7 @@ userSchema.pre("save", async function (next) {
 
 
 userSchema.methods.comparePassword = async function (plainPassword) {
+    if (!this.password) return false;
     return bcrypt.compare(plainPassword, this.password);
 };
 

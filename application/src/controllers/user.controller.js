@@ -8,10 +8,8 @@ import {
     decodeJWT,
 } from "@/utils/generateJWT.utils.js";
 import { sanitizeUser } from "@/utils/sanitize.util.js";
-import getGoogleOAuthTokens from "@/utils/getGoogleOuth.util.js";
+import getGoogleOAuthTokens, { verifyGoogleIdToken } from "@/utils/getGoogleOAuth.util.js";
 import { NextResponse } from "next/server.js";
-
-import jwt from "jsonwebtoken";
 
 import {
     sendVerificationEmail,
@@ -19,12 +17,36 @@ import {
     sendForgotPasswordEmail,
     sendResetPasswordEmail,
 } from "@/utils/mails.util.js";
-import { cookies } from "next/headers";
 
+const AUTH_COOKIE_OPTIONS = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60,
+};
 
-async function decodingUser() {
-    const cookieStore = await cookies();
-    const tokenrec = cookieStore.get("token");
+function setAuthCookie(response, token) {
+    response.cookies.set("token", token, AUTH_COOKIE_OPTIONS);
+}
+
+function clearAuthCookie(response) {
+    response.cookies.set("token", "", {
+        ...AUTH_COOKIE_OPTIONS,
+        maxAge: 0,
+    });
+}
+
+function issueJwt(userId) {
+    const token = generateAndSetJWT(userId);
+    if (!token) {
+        throw new ExpressError(500, "JWT configuration missing");
+    }
+    return token;
+}
+
+async function decodingUser(req) {
+    const tokenrec = req.cookies.get("token");
 
     if (!tokenrec || !tokenrec.value) {
         return null;
@@ -43,7 +65,7 @@ async function decodingUser() {
 
 // ---------------- STATUS ----------------
 export async function handleStatus(req) {
-    const userGot = await decodingUser();
+    const userGot = await decodingUser(req);
 
 
     const resData = {
@@ -66,18 +88,15 @@ export async function handleStatus(req) {
 // ---------------- REGISTER ----------------
 export async function handleRegister(req) {
     const { name, email, phone, password } = await req.json();
-    console.log(name);
 
     const existingUser = await User.findOne({ email });
-    console.log(existingUser)
     if (existingUser) {
-        console.log("Entered Existing user")
         if (existingUser.googleId && !existingUser.password) {
             existingUser.name = name || existingUser.name;
             existingUser.password = password;
 
             await existingUser.save();
-            const token = generateAndSetJWT(existingUser._id);
+            const token = issueJwt(existingUser._id);
 
             const resData = {
                 success: true,
@@ -85,7 +104,7 @@ export async function handleRegister(req) {
                 data: { user: sanitizeUser(existingUser) },
             }
             const response = NextResponse.json(resData, { status: 200 })
-            response.cookies.set('token', token);
+            setAuthCookie(response, token);
             // res.status(200).json({
             //     success: true,
             //     message: "User registered successfully",
@@ -93,12 +112,9 @@ export async function handleRegister(req) {
             // });
             return response;
         } else {
-            console.log("Entered here");
             throw new ExpressError(400, "User already exists");
         }
     }
-
-    console.log("Came out ")
 
     const verificationToken = generateVerificationToken();
     await sendVerificationEmail(email, verificationToken);
@@ -119,7 +135,7 @@ export async function handleRegister(req) {
     });
     await newToken.save();
 
-    const token = generateAndSetJWT(newUser._id);
+    const token = issueJwt(newUser._id);
 
     const resData = {
         success: true,
@@ -129,7 +145,7 @@ export async function handleRegister(req) {
         },
     }
     const response = NextResponse.json(resData, { status: 201 });
-    response.cookies.set("token", token);
+    setAuthCookie(response, token);
     // res.status(201).json({
     //     success: true,
     //     message: "User registered successfully",
@@ -142,7 +158,7 @@ export async function handleRegister(req) {
 
 // ---------------- SEND VERIFICATION ----------------
 export async function handleSendVerification(req) {
-    const user = await decodingUser();
+    const user = await decodingUser(req);
 
     const existingToken = await Token.findOne({
         user_id: user._id,
@@ -180,7 +196,7 @@ export async function handleSendVerification(req) {
 // ---------------- VERIFY EMAIL ----------------
 export async function handleVerifyEmail(req) {
     const { code } = await req.json();
-    const user = await decodingUser();
+    const user = await decodingUser(req);
 
     const token = await Token.findOne({
         value: code,
@@ -219,13 +235,12 @@ export async function handleLogin(req) {
     const { email, password } = await req.json();
 
     const user = await User.findOne({ email });
-    console.log(user)
     if (!user) throw new ExpressError(400, "User does not exist");
 
     const isValid = await user.comparePassword(password);
     if (!isValid) throw new ExpressError(400, "Invalid Password");
 
-    const token = generateAndSetJWT(user._id);
+    const token = issueJwt(user._id);
 
     const resData = {
         success: true,
@@ -235,7 +250,7 @@ export async function handleLogin(req) {
         },
     };
     const response = NextResponse.json(resData, { status: 200 });
-    response.cookies.set('token', token);
+    setAuthCookie(response, token);
     // res.status(200).json({
     //     success: true,
     //     message: "User logged in successfully",
@@ -258,7 +273,7 @@ export async function handleLogout() {
     //     success: true,
     //     message: "Logged out successfully",
     // });
-    response.cookies.set("token", '');
+    clearAuthCookie(response);
     return response;
 }
 
@@ -326,56 +341,33 @@ export async function handleResetPassword(req, { params }) {
 // ---------------- GOOGLE AUTH ----------------
 export async function handleGoogleAuth(req) {
     const code = req.nextUrl.searchParams.get("code");
+    if (!code) throw new ExpressError(400, "Missing Google authorization code.");
 
-    try {
-        if (!code) throw new ExpressError(400, "Missing Google authorization code.");
+    const obj = await getGoogleOAuthTokens(code);
+    const googleUser = await verifyGoogleIdToken(obj.id_token);
 
-        // Exchange code for Google tokens
-        const obj = await getGoogleOAuthTokens(code);
-        const googleUser = jwt.decode(obj.id_token);
+    let user = await User.findOne({
+        $or: [{ googleId: googleUser.sub }, { email: googleUser.email }],
+    });
 
-        if (!googleUser || !googleUser.email) {
-            throw new ExpressError(400, "Unable to get user info from Google.");
-        }
-
-        // Check if user already exists
-        let user = await User.findOne({
-            $or: [{ googleId: googleUser.sub }, { email: googleUser.email }],
+    if (!user) {
+        user = new User({
+            name: googleUser.name || googleUser.email,
+            email: googleUser.email,
+            googleId: googleUser.sub,
+            isVerified: true,
         });
 
-        if (!user) {
-            // Register a new Google user
-            user = new User({
-                name: googleUser.name || googleUser.email,
-                email: googleUser.email,
-                googleId: googleUser.sub,
-                isVerified: true,
-            });
-
-            await user.save();
-            await sendWelcomeEmail(user.email, user.name);
-        } else if (!user.googleId) {
-            // Link Google account to existing user
-            user.isVerified = true;
-            user.googleId = googleUser.sub;
-            await user.save();
-        }
-
-        // Generate JWT and set in cookie
-        const token = await generateAndSetJWT(user._id);
-        const response = NextResponse.redirect(process.env.CLIENT_URL);
-
-        response.cookies.set("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 7 * 24 * 60 * 60, // 7 days
-        });
-
-        return response;
-    } catch (err) {
-        console.error("Google Auth error:", err.message);
-        return NextResponse.redirect(process.env.CLIENT_URL);
+        await user.save();
+        await sendWelcomeEmail(user.email, user.name);
+    } else if (!user.googleId) {
+        user.isVerified = true;
+        user.googleId = googleUser.sub;
+        await user.save();
     }
+
+    const token = issueJwt(user._id);
+    const response = NextResponse.redirect(process.env.CLIENT_URL);
+    setAuthCookie(response, token);
+    return response;
 }

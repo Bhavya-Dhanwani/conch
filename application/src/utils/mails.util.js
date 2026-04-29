@@ -18,7 +18,7 @@ export async function sendVerificationEmail(email, verificationToken) {
   try {
     await transporter.sendMail(mailOptions);
   } catch (err) {
-    throw new ExpressError(500, err);
+    throw new ExpressError(500, "Failed to send verification email");
   }
 }
 
@@ -36,7 +36,7 @@ export async function sendWelcomeEmail(email, name) {
   try {
     await transporter.sendMail(mailOptions);
   } catch (err) {
-    throw new ExpressError(500, err);
+    throw new ExpressError(500, "Failed to send welcome email");
   }
 }
 
@@ -51,7 +51,7 @@ export async function sendForgotPasswordEmail(email, resetUrl) {
   try {
     await transporter.sendMail(mailOptions);
   } catch (err) {
-    throw new ExpressError(500, err);
+    throw new ExpressError(500, "Failed to send forgot password email");
   }
 }
 
@@ -66,6 +66,6 @@ export async function sendResetPasswordEmail(email) {
   try {
     await transporter.sendMail(mailOptions);
   } catch (err) {
-    throw new ExpressError(500, err);
+    throw new ExpressError(500, "Failed to send reset password email");
   }
 }
