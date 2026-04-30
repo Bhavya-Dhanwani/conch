@@ -1,0 +1,19 @@
+### Test 1
+POST http://localhost:3000/api/gen-ai
+Content-Type: application/json
+
+{
+  "logs": "[10:32] ERROR: Cannot read property 'name'",
+  "error": "TypeError: Cannot read properties of undefined",
+  "code": "user.name.toUpperCase()"
+}
+
+### Test 2
+POST http://localhost:3000/api/gen-ai
+Content-Type: application/json
+
+{
+  "logs": "DB failed after retry",
+  "error": "MongoNetworkError: timeout",
+  "code": "mongoose.connect()"
+}
