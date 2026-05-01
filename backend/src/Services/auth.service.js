@@ -13,6 +13,8 @@ const editableEmployeeFields = [
 ];
 
 const sanitizeUser = (user) => user.toObject();
+const normalizeEmail = (email) => email?.trim().toLowerCase();
+const normalizeName = (name) => name?.trim();
 
 const createAuthPayload = (user) => ({
   token: generateToken({ userId: user._id, role: user.role }),
@@ -73,18 +75,21 @@ const getEmployeeUpdatePayload = (employeeData) => {
 };
 
 export const signupManager = async ({ name, email, password } = {}) => {
-  if (!name || !email || !password) {
+  const normalizedName = normalizeName(name);
+  const normalizedEmail = normalizeEmail(email);
+
+  if (!normalizedName || !normalizedEmail || !password) {
     throw new AppError("Name, email and password are required", 400);
   }
 
-  const existingUser = await Users.findOne({ email });
+  const existingUser = await Users.findOne({ email: normalizedEmail });
   if (existingUser) {
     throw new AppError("User already exists with this email", 409);
   }
 
   const user = await Users.create({
-    name,
-    email,
+    name: normalizedName,
+    email: normalizedEmail,
     password: await generateHash(password),
     role: "MANAGER",
   });
@@ -93,11 +98,15 @@ export const signupManager = async ({ name, email, password } = {}) => {
 };
 
 export const loginUser = async ({ email, password } = {}) => {
-  if (!email || !password) {
+  const normalizedEmail = normalizeEmail(email);
+
+  if (!normalizedEmail || !password) {
     throw new AppError("Email and password are required", 400);
   }
 
-  const user = await Users.findOne({ email }).select("+password");
+  const user = await Users.findOne({ email: normalizedEmail }).select(
+    "+password",
+  );
   if (!user) throw new AppError("Invalid email or password", 401);
 
   const isMatch = await compareHash(password, user.password);
@@ -111,9 +120,11 @@ export const loginUser = async ({ email, password } = {}) => {
 export const createEmployee = async (manager, employeeData = {}) => {
   const { name, email, work, employmentStartsAt, employmentEndsAt } =
     employeeData;
+  const normalizedName = normalizeName(name);
+  const normalizedEmail = normalizeEmail(email);
   const password = generateEmployeePassword() || "PASS";
 
-  if (!name || !email) {
+  if (!normalizedName || !normalizedEmail) {
     throw new AppError("Employee name and email are required", 400);
   }
 
@@ -121,14 +132,14 @@ export const createEmployee = async (manager, employeeData = {}) => {
     throw new AppError("employmentEndsAt is required for employee TTL", 400);
   }
 
-  const existingUser = await Users.findOne({ email });
+  const existingUser = await Users.findOne({ email: normalizedEmail });
   if (existingUser) {
     throw new AppError("User already exists with this email", 409);
   }
 
   const employee = await Users.create({
-    name,
-    email,
+    name: normalizedName,
+    email: normalizedEmail,
     password: await generateHash(password),
     role: "EMPLOYEE",
     managerId: manager._id,
@@ -139,13 +150,13 @@ export const createEmployee = async (manager, employeeData = {}) => {
 
   try {
     await sendEmail(
-      email,
+      normalizedEmail,
       "Your employee account is ready",
-      `<p>Hello ${name},</p>
-       <p>Your employee account has been created.</p>
-       <p><strong>Email:</strong> ${email}</p>
-       <p><strong>Password:</strong> ${password}</p>
-       <p>Please login and keep these credentials safe.</p>`,
+      `<p>Hello ${normalizedName},</p>
+        <p>Your employee account has been created.</p>
+        <p><strong>Email:</strong> ${normalizedEmail}</p>
+        <p><strong>Password:</strong> ${password}</p>
+        <p>Please login and keep these credentials safe.</p>`,
     );
   } catch {
     await Users.findByIdAndDelete(employee._id);
