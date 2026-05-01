@@ -1,0 +1,33 @@
+import express from "express";
+import * as controller from "../Controllers/auth.controller.js";
+import { isAuthenticated, restrictTo } from "../Middlewares/auth.middleware.js";
+
+const authRouter = express.Router();
+
+authRouter
+  .post("/signup", controller.signup)
+  .post("/login", controller.login)
+  .get("/me", isAuthenticated, controller.getMe)
+  .post("/logout", controller.logout);
+
+authRouter
+  .post(
+    "/employees",
+    isAuthenticated,
+    restrictTo("MANAGER"),
+    controller.createEmployee,
+  )
+  .patch(
+    "/employees/:employeeId",
+    isAuthenticated,
+    restrictTo("MANAGER"),
+    controller.updateEmployee,
+  )
+  .delete(
+    "/employees/:employeeId",
+    isAuthenticated,
+    restrictTo("MANAGER"),
+    controller.deleteEmployee,
+  );
+
+export default authRouter;
