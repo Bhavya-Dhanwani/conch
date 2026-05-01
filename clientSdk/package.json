@@ -1,0 +1,30 @@
+{
+  "name": "@conch/client-sdk",
+  "version": "0.1.0",
+  "description": "Client SDK for capturing JavaScript runtime errors and sending them to Conch backend.",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "check": "node --check src/index.js"
+  },
+  "keywords": [
+    "conch",
+    "error-tracking",
+    "monitoring",
+    "runtime-errors",
+    "sdk"
+  ],
+  "author": "",
+  "license": "MIT"
+}
