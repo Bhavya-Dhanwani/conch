@@ -9,12 +9,23 @@ const app = express();
 app.set("trust proxy", 1);
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(
+  "/api/ingest",
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
+    origin: "*",
+    credentials: false,
   }),
 );
+
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/ingest")) return next();
+
+  return cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  })(req, res, next);
+});
 
 app.use("/api", allRoutes);
 

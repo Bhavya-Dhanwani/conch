@@ -54,6 +54,16 @@ export const createEmployee = catchAsync(async (req, res) => {
   });
 });
 
+export const getEmployees = catchAsync(async (req, res) => {
+  const employees = await authServices.getEmployees(req.user);
+
+  return res.status(200).json({
+    success: true,
+    message: "Employees fetched successfully",
+    employees,
+  });
+});
+
 export const updateEmployee = catchAsync(async (req, res) => {
   const employee = await authServices.updateEmployee(
     req.user,

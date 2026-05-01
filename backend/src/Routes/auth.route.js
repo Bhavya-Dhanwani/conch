@@ -17,6 +17,12 @@ authRouter
     restrictTo("MANAGER"),
     controller.createEmployee,
   )
+  .get(
+    "/employees",
+    isAuthenticated,
+    restrictTo("MANAGER"),
+    controller.getEmployees,
+  )
   .patch(
     "/employees/:employeeId",
     isAuthenticated,

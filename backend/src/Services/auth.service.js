@@ -158,6 +158,17 @@ export const createEmployee = async (manager, employeeData = {}) => {
   return sanitizeUser(employee);
 };
 
+export const getEmployees = async (manager) => {
+  const employees = await Users.find({
+    role: "EMPLOYEE",
+    managerId: manager._id,
+  })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return employees;
+};
+
 export const updateEmployee = async (manager, employeeId, employeeData) => {
   const updatePayload = getEmployeeUpdatePayload(employeeData);
 
@@ -184,3 +195,5 @@ export const deleteEmployee = async (manager, employeeId) => {
 
   return sanitizeUser(employee);
 };
+
+
