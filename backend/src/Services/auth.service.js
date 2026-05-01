@@ -186,7 +186,7 @@ export const updateEmployee = async (manager, employeeId, employeeData) => {
   const employee = await Users.findOneAndUpdate(
     getEmployeeFilter(manager, employeeId),
     { $set: updatePayload },
-    { new: true, runValidators: true },
+    { returnDocument: "after", runValidators: true },
   );
   if (!employee) {
     throw new AppError("Employee not found", 404);

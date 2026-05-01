@@ -1,11 +1,17 @@
 import Projects from "../Models/project.model.js";
 import Logs from "../Models/log.model.js";
+import { queueLogAnalysis } from "./ai.service.js";
 import { AppError } from "../Utilities/appError.js";
 
 const normalizeStackTrace = (stackTrace) => {
   if (!stackTrace) return null;
   if (typeof stackTrace === "string") return stackTrace.slice(0, 12000);
   return stackTrace;
+};
+
+const normalizeCodeSnippet = (codeSnippet) => {
+  if (!codeSnippet) return "";
+  return String(codeSnippet).slice(0, 12000);
 };
 
 const normalizeMetadata = (metadata = {}) => ({
@@ -43,9 +49,14 @@ export const ingestEvent = async (apiKey, payload = {}) => {
     stackTrace: normalizeStackTrace(
       payload.stackTrace || payload.stack || payload.error?.stack,
     ),
+    codeSnippet: normalizeCodeSnippet(
+      payload.codeSnippet || payload.code || payload.sourceCode,
+    ),
     metadata: normalizeMetadata(payload.metadata),
     status: "PENDING",
   });
+
+  queueLogAnalysis(log._id);
 
   return log.toObject();
 };

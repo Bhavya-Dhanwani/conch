@@ -19,6 +19,13 @@ const aiReportSchema = new mongoose.Schema(
       enum: ["LOW", "MEDIUM", "HIGH"],
       default: "LOW",
     },
+    rootCause: { type: String, default: "" },
+    where: { type: String, default: "" },
+    when: { type: String, default: "" },
+    fixSteps: { type: [String], default: [] },
+    correctedCode: { type: String, default: "" },
+    prevention: { type: [String], default: [] },
+    confidence: { type: String, default: "" },
   },
   { _id: false },
 );
@@ -50,6 +57,11 @@ const logSchema = new mongoose.Schema(
     stackTrace: {
       type: mongoose.Schema.Types.Mixed,
       default: null,
+    },
+    codeSnippet: {
+      type: String,
+      trim: true,
+      default: "",
     },
     metadata: {
       type: metadataSchema,
