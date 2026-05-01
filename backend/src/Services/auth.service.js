@@ -111,7 +111,7 @@ export const loginUser = async ({ email, password } = {}) => {
 export const createEmployee = async (manager, employeeData = {}) => {
   const { name, email, work, employmentStartsAt, employmentEndsAt } =
     employeeData;
-  const password = "sujal2004" || generateEmployeePassword();
+  const password = generateEmployeePassword() || "PASS";
 
   if (!name || !email) {
     throw new AppError("Employee name and email are required", 400);
