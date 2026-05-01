@@ -1,0 +1,20 @@
+{
+  "name": "conch",
+  "version": "0.1.0",
+  "description": "Lightweight JS SDK to capture runtime errors and send them to Conch backend.",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "conch",
+    "error-tracking",
+    "monitoring",
+    "sdk"
+  ],
+  "license": "MIT"
+}
