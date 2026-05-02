@@ -21,6 +21,128 @@ const createAuthPayload = (user) => ({
   user: sanitizeUser(user),
 });
 
+const getClientRedirectUrl = () => {
+  return (
+    process.env.CLIENT_REDIRECT_URL ||
+    process.env.CLIENT_APP_URL ||
+    process.env.CLIENT_URL?.split(",")[0]?.trim() ||
+    "http://localhost:3000"
+  );
+};
+
+export const getGithubAuthorizationUrl = () => {
+  const clientId = process.env.GITHUB_CLIENT_ID;
+  const redirectUri = process.env.GITHUB_CALLBACK_URL;
+
+  if (!clientId || !redirectUri) {
+    throw new AppError("GitHub OAuth is not configured", 500);
+  }
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    scope: process.env.GITHUB_OAUTH_SCOPES || "read:user user:email repo",
+    allow_signup: "true",
+  });
+
+  return `https://github.com/login/oauth/authorize?${params.toString()}`;
+};
+
+const fetchGithubAccessToken = async (code) => {
+  const response = await fetch("https://github.com/login/oauth/access_token", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code,
+      redirect_uri: process.env.GITHUB_CALLBACK_URL,
+    }),
+  });
+  const data = await response.json();
+
+  if (!response.ok || !data.access_token) {
+    throw new AppError(data.error_description || "GitHub authorization failed", 401);
+  }
+
+  return data.access_token;
+};
+
+const fetchGithubJson = async (url, accessToken) => {
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${accessToken}`,
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new AppError(data.message || "GitHub API request failed", response.status);
+  }
+
+  return data;
+};
+
+const getGithubPrimaryEmail = async (accessToken, fallbackEmail) => {
+  if (fallbackEmail) {
+    return normalizeEmail(fallbackEmail);
+  }
+
+  const emails = await fetchGithubJson("https://api.github.com/user/emails", accessToken);
+  const primaryEmail = emails.find((email) => email.primary && email.verified) || emails.find((email) => email.verified);
+
+  return normalizeEmail(primaryEmail?.email);
+};
+
+export const loginWithGithub = async (code) => {
+  if (!code) {
+    throw new AppError("Missing GitHub authorization code", 400);
+  }
+
+  const accessToken = await fetchGithubAccessToken(code);
+  const githubUser = await fetchGithubJson("https://api.github.com/user", accessToken);
+  const email = await getGithubPrimaryEmail(accessToken, githubUser.email);
+
+  if (!email) {
+    throw new AppError("GitHub account does not expose a verified email", 400);
+  }
+
+  let user = await Users.findOne({
+    $or: [{ githubId: String(githubUser.id) }, { email }],
+  });
+
+  const githubPayload = {
+    githubId: String(githubUser.id),
+    githubUsername: githubUser.login || "",
+    githubAvatarUrl: githubUser.avatar_url || "",
+    githubAccessToken: accessToken,
+  };
+
+  if (!user) {
+    user = await Users.create({
+      name: normalizeName(githubUser.name) || githubUser.login || email.split("@")[0],
+      email,
+      role: "MANAGER",
+      ...githubPayload,
+    });
+  } else {
+    Object.assign(user, githubPayload);
+    if (!user.name) {
+      user.name = githubUser.name || githubUser.login || user.email.split("@")[0];
+    }
+    await user.save();
+  }
+
+  return createAuthPayload(user);
+};
+
+export { getClientRedirectUrl };
+
 const generateEmployeePassword = () => {
   return Math.random().toString(36).slice(2, 8) + Date.now().toString(36);
 };
