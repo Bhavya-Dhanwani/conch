@@ -1,6 +1,7 @@
 import ConchStatementSection from "./ConchStatementSection";
 import FeaturesSection from "./FeaturesSection";
 import HeroSection from "./HeroSection";
+import LandingFooter from "./LandingFooter";
 import styles from "./LandingPage.module.css";
 import ProcessStepsSection from "./ProcessStepsSection";
 import VideoRevealSection from "./VideoRevealSection";
@@ -13,6 +14,7 @@ export default function LandingPage() {
       <ProcessStepsSection />
       <VideoRevealSection />
       <ConchStatementSection />
+      <LandingFooter />
     </main>
   );
 }
