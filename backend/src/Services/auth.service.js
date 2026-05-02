@@ -158,10 +158,10 @@ export const createEmployee = async (manager, employeeData = {}) => {
         <p><strong>Password:</strong> ${password}</p>
         <p>Please login and keep these credentials safe.</p>`,
     );
-  } catch {
+  } catch (error) {
     await Users.findByIdAndDelete(employee._id);
     throw new AppError(
-      "Employee email send failed. Employee was not created.",
+      `Employee email send failed. Employee was not created. ${error.message}`,
       500,
     );
   }

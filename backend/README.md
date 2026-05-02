@@ -1076,6 +1076,7 @@ Known environment variables used by the backend:
 PORT
 CLIENT_URL
 RESEND_API_KEY
+SENDER_EMAIL
 GEMINI_API_KEY
 GEMINI_MODEL
 MODEL

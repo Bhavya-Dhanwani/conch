@@ -106,6 +106,13 @@ POST /api/auth/employees
 
 Creates an employee under the logged-in manager. Backend generates a password and emails it to the employee.
 
+Requires mail env:
+
+```txt
+RESEND_API_KEY
+SENDER_EMAIL
+```
+
 Auth:
 
 ```txt
