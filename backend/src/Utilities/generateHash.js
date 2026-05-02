@@ -1,15 +1,12 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const generateHash = async (plainText) => {
   try {
-    // Edge case: if password is empty then throw error
     if (!plainText) {
       throw new Error("Input text is required for hashing");
     }
 
     const saltRounds = 10;
-
-    // salt generate & hashing (Recommended)
     const hashedValue = await bcrypt.hash(`${plainText}`, saltRounds);
 
     return hashedValue;
@@ -20,7 +17,6 @@ const generateHash = async (plainText) => {
 
 const compareHash = async (plainText, hashedValue) => {
   try {
-    // Edge case: Input validation
     if (!plainText || !hashedValue) {
       throw new Error("Both plain text and hash are required for comparison");
     }

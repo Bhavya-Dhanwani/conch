@@ -7,6 +7,8 @@ const authRouter = express.Router();
 authRouter
   .post("/signup", controller.signup)
   .post("/login", controller.login)
+  .get("/github", controller.githubAuthorize)
+  .get("/github/callback", controller.githubCallback)
   .get("/me", isAuthenticated, controller.getMe)
   .post("/logout", controller.logout);
 
@@ -16,6 +18,12 @@ authRouter
     isAuthenticated,
     restrictTo("MANAGER"),
     controller.createEmployee,
+  )
+  .get(
+    "/employees",
+    isAuthenticated,
+    restrictTo("MANAGER"),
+    controller.getEmployees,
   )
   .patch(
     "/employees/:employeeId",
