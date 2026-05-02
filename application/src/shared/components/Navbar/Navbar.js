@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Logo from "@/shared/components/Logo/Logo";
@@ -18,31 +19,31 @@ import styles from "./Navbar.module.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const navItems = [
-  { label: "Signal", href: "#signal" },
-  { label: "Incident Flow", href: "#incident-flow" },
-  { label: "Command Room", href: "#command-room" },
-  { label: "Postmortem", href: "#postmortem" },
+  { label: "Docs", href: "/#docs" },
+  { label: "Use Template", href: "/create" },
+  { label: "AI Builder", href: "/create" },
+  { label: "Deploy", href: "/#deploy" },
 ];
 
 const secondaryItems = [
-  { label: "Severity", href: "#incident-flow" },
-  { label: "Assignment", href: "#command-room" },
-  { label: "Team Chat", href: "#command-room" },
-  { label: "CONCH AI", href: "#command-room" },
-  { label: "Logs", href: "#postmortem" },
-  { label: "Reports", href: "#postmortem" },
-  { label: "Developers", href: "#signal" },
-  { label: "Managers", href: "#incident-flow" },
+  { label: "Templates", href: "/create" },
+  { label: "Builder", href: "/create" },
+  { label: "Deployment", href: "/#deploy" },
+  { label: "Support", href: "/#docs" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const overlayRef = useRef(null);
   const drawerRef = useRef(null);
   const menuItemRefs = useRef([]);
+  const accountItem = isAuthenticated
+    ? { label: "Dashboard", href: "/dashboard" }
+    : { label: "Get Started", href: "/signup" };
 
   useEffect(() => {
     const trigger = ScrollTrigger.create({
@@ -208,8 +209,8 @@ export default function Navbar() {
           </button>
 
           <div className={styles.actions}>
-            <Link className={styles.action} href="#signal">
-              Start Trace
+            <Link className={styles.action} href={accountItem.href}>
+              {accountItem.label}
               <ArrowRightIcon className={styles.inlineIcon} />
             </Link>
           </div>
@@ -266,12 +267,23 @@ export default function Navbar() {
             </div>
 
             <div className={styles.drawerSecondary}>
+              <Link
+                href={accountItem.href}
+                ref={(node) => {
+                  menuItemRefs.current[navItems.length] = node;
+                }}
+                onClick={closeMenu}
+              >
+                {accountItem.label}
+                <ArrowRightIcon className={styles.smallArrowIcon} />
+              </Link>
+
               {secondaryItems.map((item, index) => (
                 <Link
                   href={item.href}
                   key={item.href}
                   ref={(node) => {
-                    menuItemRefs.current[navItems.length + index] = node;
+                    menuItemRefs.current[navItems.length + index + 1] = node;
                   }}
                   onClick={closeMenu}
                 >
@@ -284,7 +296,7 @@ export default function Navbar() {
             <div
               className={styles.socials}
               ref={(node) => {
-                menuItemRefs.current[navItems.length + secondaryItems.length] = node;
+                menuItemRefs.current[navItems.length + secondaryItems.length + 1] = node;
               }}
             >
               <span>Socials</span>

@@ -57,7 +57,7 @@ export default function LandingFooter() {
   }, []);
 
   return (
-    <footer className={styles.footer} ref={footerRef} aria-label="CONCH footer">
+    <footer className={styles.footer} id="docs" ref={footerRef} aria-label="CONCH footer">
       <div className={styles.inner}>
         <div
           className={styles.brand}
