@@ -1,0 +1,905 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  overflow: hidden;
+  color: #111111;
+  background:
+    radial-gradient(circle at center, rgb(255 255 255 / 96%) 0 18%, rgb(255 255 255 / 72%) 33%, transparent 62%),
+    radial-gradient(circle at 8% 14%, rgb(79 125 243 / 10%), transparent 28%),
+    radial-gradient(circle at 92% 88%, rgb(34 197 94 / 9%), transparent 30%),
+    #f5f5f5;
+  isolation: isolate;
+}
+
+.page::after {
+  content: none;
+}
+
+.signupFlowPage {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #ffffff;
+  background: linear-gradient(180deg, #2fa7ef 0%, #2fa8f0 62%, #8fd3f5 100%);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  isolation: isolate;
+}
+
+.signupHeader {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 68px 72px 0;
+}
+
+.signupLogo {
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.signupProgress {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.signupProgress span {
+  width: 6px;
+  height: 6px;
+  display: block;
+  background: rgb(255 255 255 / 34%);
+  border-radius: 999px;
+}
+
+.signupProgress .signupProgressActive {
+  background: #ffffff;
+}
+
+.signupQuestion {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 560px);
+  display: grid;
+  justify-items: stretch;
+  margin-top: -74px;
+  padding-bottom: 188px;
+}
+
+.signupStepContent {
+  display: grid;
+  justify-items: stretch;
+  animation: stepEnter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.signupQuestion h1 {
+  max-width: 560px;
+  margin: 0 0 62px;
+  color: #ffffff;
+  text-align: center;
+  font-size: clamp(60px, 5.2vw, 80px);
+  font-weight: 850;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.signupQuestion input {
+  width: 360px;
+  height: 60px;
+  justify-self: center;
+  padding: 0 20px;
+  color: #ffffff;
+  background: rgb(255 255 255 / 16%);
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  box-shadow: none;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: 0;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.signupQuestion input::placeholder {
+  color: rgb(255 255 255 / 78%);
+}
+
+.signupQuestion input:focus {
+  background: rgb(255 255 255 / 22%);
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 22%);
+}
+
+.signupQuestion input[aria-invalid="true"] {
+  box-shadow: 0 0 0 3px rgb(255 77 79 / 42%);
+}
+
+.signupQuestion button {
+  width: 360px;
+  height: 60px;
+  justify-self: center;
+  color: #000000;
+  background: #ffffff;
+  border: 0;
+  border-radius: 0;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 850;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+}
+
+.signupQuestion button:hover:not(:disabled),
+.signupQuestion button:focus-visible:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px rgb(0 80 140 / 18%);
+}
+
+.signupQuestion button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.signupQuestion button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.signupError,
+.signupStatus {
+  width: 360px;
+  justify-self: center;
+  text-align: center;
+}
+
+.signupError,
+.signupStatus {
+  margin-top: 14px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 760;
+  text-shadow: 0 1px 12px rgb(0 87 145 / 24%);
+}
+
+.signupArt {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  height: 190px;
+  display: grid;
+  place-items: center;
+  --rail-shift: 0px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.iconRailMask {
+  width: 336px;
+  height: 112px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.iconRail {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  transform: translateX(var(--rail-shift));
+  transition: transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.railBubble {
+  width: 88px;
+  height: 88px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: rgb(190 232 255 / 38%);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 18%),
+    0 18px 42px rgb(0 101 170 / 8%);
+  font-size: 28px;
+  opacity: 0.68;
+}
+
+.railBubbleMain {
+  border: 2px solid rgb(255 255 255 / 92%);
+  font-size: 36px;
+  opacity: 1;
+}
+
+.bottomSignin {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 4;
+  max-width: calc(100vw - 48px);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 760;
+  line-height: 1.3;
+  text-align: right;
+  text-shadow: 0 1px 14px rgb(0 80 140 / 22%);
+}
+
+.bottomSignin a {
+  color: #ffffff;
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.bottomSignin a:hover,
+.bottomSignin a:focus-visible {
+  text-decoration-thickness: 2px;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.card {
+  width: min(100%, 432px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid rgb(17 17 17 / 5%);
+  border-radius: 20px;
+  box-shadow:
+    0 34px 90px rgb(19 31 56 / 13%),
+    0 12px 34px rgb(19 31 56 / 8%);
+  animation: cardIn 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.brand {
+  display: flex;
+  justify-content: center;
+  color: #111111;
+  --nav-ink: #111111;
+}
+
+.brand img {
+  width: 30px;
+  height: 30px;
+}
+
+.brand span span {
+  font-size: 14px;
+  letter-spacing: 0.14em;
+}
+
+.intro {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.kicker {
+  color: #4f7df3;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.intro h1 {
+  color: #111111;
+  font-size: clamp(32px, 5vw, 36px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.intro p:not(.kicker) {
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.oauthButton,
+.primaryButton {
+  height: 48px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 760;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(0) scale(1);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.oauthButton {
+  color: #16181d;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 18px rgb(17 24 39 / 5%);
+}
+
+.oauthButton:hover,
+.oauthButton:focus-visible {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgb(79 125 243 / 24%);
+  box-shadow:
+    0 16px 34px rgb(17 24 39 / 9%),
+    0 0 0 5px rgb(79 125 243 / 7%);
+}
+
+.disabledLink {
+  color: #8b94a6;
+}
+
+.oauthMark {
+  width: 28px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #4f7df3;
+  background: #f7f9ff;
+  border: 1px solid #e6ecff;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.divider {
+  height: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eceff4;
+}
+
+.divider span {
+  padding: 0 12px;
+  color: #9aa3b2;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  color: #252a34;
+  font-size: 13px;
+  font-weight: 760;
+  line-height: 1;
+}
+
+.field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  color: #111111;
+  background: #ffffff;
+  border: 1px solid #e4e8f0;
+  border-radius: 12px;
+  outline: 0;
+  box-shadow:
+    0 1px 0 rgb(17 17 17 / 2%),
+    0 10px 24px rgb(21 34 66 / 3%);
+  font: inherit;
+  font-size: 15px;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+.field input::placeholder {
+  color: #b2bac8;
+}
+
+.field input:focus {
+  border-color: #4f7df3;
+  box-shadow:
+    0 0 0 4px rgb(79 125 243 / 13%),
+    0 12px 28px rgb(79 125 243 / 10%);
+}
+
+.field input[aria-invalid="true"] {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 4px rgb(255 77 79 / 10%);
+}
+
+.field small {
+  color: #d93539;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.primaryButton {
+  margin-top: 4px;
+  color: #ffffff;
+  background: #4f7df3;
+  border: 1px solid #4f7df3;
+  box-shadow:
+    0 14px 30px rgb(79 125 243 / 22%),
+    inset 0 1px 0 rgb(255 255 255 / 24%);
+}
+
+.primaryButton:hover:not(:disabled),
+.primaryButton:focus-visible:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  background: #426fe4;
+  box-shadow:
+    0 18px 38px rgb(79 125 243 / 30%),
+    0 0 0 5px rgb(79 125 243 / 10%);
+}
+
+.primaryButton:active:not(:disabled),
+.oauthButton:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.54;
+  box-shadow: none;
+}
+
+.statusMessage {
+  min-height: 18px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.38;
+}
+
+.success {
+  color: #16a34a;
+}
+
+.error {
+  color: #d93539;
+}
+
+.switcher {
+  color: #6b7280;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.switcher a {
+  color: #315fdf;
+  font-weight: 800;
+}
+
+.switcher a:hover,
+.switcher a:focus-visible {
+  color: #204cc1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.floatCard {
+  position: absolute;
+  width: 230px;
+  min-height: 150px;
+  padding: 18px;
+  overflow: hidden;
+  color: #121722;
+  background: rgb(255 255 255 / 84%);
+  border: 1px solid rgb(255 255 255 / 88%);
+  border-radius: 18px;
+  box-shadow:
+    0 30px 72px rgb(21 34 66 / 13%);
+  opacity: 0.78;
+  filter: blur(0.15px);
+  animation: drift 12s ease-in-out infinite alternate;
+}
+
+.cardOne {
+  top: 12%;
+  left: 7%;
+  transform: rotate(-12deg);
+}
+
+.cardTwo {
+  top: 17%;
+  right: 7%;
+  width: 260px;
+  transform: rotate(10deg);
+  animation-delay: -4s;
+}
+
+.cardThree {
+  right: 10%;
+  bottom: 11%;
+  width: 220px;
+  min-height: 136px;
+  transform: rotate(-8deg);
+  opacity: 0.7;
+  filter: blur(0.7px);
+  animation-delay: -7s;
+}
+
+.cardFour {
+  left: 10%;
+  bottom: 14%;
+  width: 210px;
+  min-height: 170px;
+  transform: rotate(13deg);
+  opacity: 0.65;
+  filter: blur(0.45px);
+  animation-delay: -2s;
+}
+
+.floatHeader,
+.metricRow,
+.deployTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.floatHeader span,
+.metricRow span,
+.deployTop span,
+.logTitle,
+.workflowTitle {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 760;
+}
+
+.floatHeader strong,
+.metricRow b,
+.deployTop b {
+  font-size: 16px;
+}
+
+.deployTop b {
+  color: #22c55e;
+}
+
+.chartBars {
+  height: 72px;
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  margin: 18px 0 14px;
+}
+
+.chartBars i {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  background: linear-gradient(180deg, #4f7df3, #9eb7ff);
+  border-radius: 999px 999px 4px 4px;
+}
+
+.logTitle,
+.workflowTitle {
+  margin-bottom: 14px;
+}
+
+.logLine,
+.nodeRow {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 0 10px;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+}
+
+.logLine code {
+  color: #283142;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+}
+
+.redDot,
+.blueDot,
+.nodeRow span {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+}
+
+.redDot {
+  background: #ff4d4f;
+}
+
+.blueDot {
+  background: #4f7df3;
+}
+
+.traceGrid {
+  display: grid;
+  grid-template-columns: 1fr 0.7fr 0.9fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.traceGrid span {
+  height: 28px;
+  background: #eef4ff;
+  border-radius: 9px;
+}
+
+.progressTrack {
+  height: 10px;
+  margin: 22px 0 18px;
+  overflow: hidden;
+  background: #eef2f7;
+  border-radius: 999px;
+}
+
+.progressTrack span {
+  width: 78%;
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, #4f7df3, #22c55e);
+  border-radius: inherit;
+}
+
+.deploySteps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.deploySteps i {
+  height: 38px;
+  display: block;
+  background: #f6f8fb;
+  border: 1px solid #edf1f6;
+  border-radius: 11px;
+}
+
+.nodeRow b {
+  color: #293142;
+  font-size: 12px;
+}
+
+.nodeRow span {
+  background: #22c55e;
+}
+
+.nodeRow:nth-child(3) span {
+  background: #4f7df3;
+}
+
+.nodeRow:nth-child(4) span {
+  background: #a7b2c6;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drift {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -18px;
+  }
+}
+
+@keyframes floatPreview {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -14px;
+  }
+}
+
+@keyframes stepEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1080px) {
+  .floatCard {
+    opacity: 0.48;
+    transform: scale(0.9);
+  }
+
+  .cardOne,
+  .cardFour {
+    left: -42px;
+  }
+
+  .cardTwo,
+  .cardThree {
+    right: -46px;
+  }
+}
+
+@media (max-width: 760px) {
+  .signupHeader {
+    padding: 32px 28px 0;
+  }
+
+  .signupLogo {
+    font-size: 24px;
+  }
+
+  .signupQuestion {
+    width: min(100%, 380px);
+    padding-inline: 20px;
+    padding-bottom: 180px;
+    margin-top: 0;
+  }
+
+  .signupQuestion h1 {
+    margin-bottom: 40px;
+    font-size: 48px;
+  }
+
+  .signupQuestion input,
+  .signupQuestion button,
+  .signupError,
+  .signupStatus {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .bottomSignin {
+    right: 50%;
+    bottom: 18px;
+    transform: translateX(50%);
+    width: max-content;
+    text-align: center;
+  }
+
+  .signupArt {
+    height: 152px;
+  }
+
+  .iconRailMask {
+    width: 252px;
+    height: 84px;
+  }
+
+  .iconRail {
+    gap: 18px;
+    transform: translateX(var(--rail-shift-mobile));
+  }
+
+  .railBubble {
+    width: 66px;
+    height: 66px;
+    font-size: 22px;
+  }
+
+  .railBubbleMain {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 20px;
+    background:
+      radial-gradient(circle at 50% 30%, rgb(255 255 255 / 94%) 0 18%, transparent 58%),
+      #f5f5f5;
+  }
+
+  .scene {
+    display: none;
+  }
+
+  .card {
+    padding: 28px;
+    border-radius: 18px;
+  }
+
+}
+
+@media (max-width: 430px) {
+  .page {
+    align-items: start;
+    padding: 16px;
+  }
+
+  .card {
+    margin-top: 24px;
+    padding: 24px;
+  }
+
+  .intro h1 {
+    font-size: 32px;
+  }
+
+  .signupQuestion h1 {
+    margin-bottom: 36px;
+    font-size: 44px;
+  }
+
+  .signupQuestion {
+    padding-inline: 38px;
+    padding-bottom: 168px;
+  }
+
+  .signupQuestion input,
+  .signupQuestion button {
+    height: 56px;
+    font-size: 16px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .floatCard,
+  .oauthButton,
+  .primaryButton,
+  .field input,
+  .motionTile,
+  .signupStepContent,
+  .iconRail {
+    animation: none;
+    transition: none;
+  }
+
+}

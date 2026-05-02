@@ -27,6 +27,18 @@ export const login = catchAsync(async (req, res) => {
   });
 });
 
+export const githubAuthorize = catchAsync(async (req, res) => {
+  return res.redirect(authServices.getGithubAuthorizationUrl());
+});
+
+export const githubCallback = catchAsync(async (req, res) => {
+  const { user, token } = await authServices.loginWithGithub(req.query.code);
+
+  sendAuthCookie(res, token);
+
+  return res.redirect(`${authServices.getClientRedirectUrl()}/`);
+});
+
 export const getMe = catchAsync(async (req, res) => {
   res.status(200).json({
     success: true,

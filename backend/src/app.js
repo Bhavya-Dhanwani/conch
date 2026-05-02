@@ -12,8 +12,45 @@ import {
 import globalErrorHandler from "./Middlewares/globalError.middleware.js";
 
 const app = express();
+const defaultClientOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:3002",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+  "http://127.0.0.1:3002",
+  "http://localhost:5173",
+];
+const configuredClientOrigins = (process.env.CLIENT_URL || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const allowedClientOrigins = [...new Set([...defaultClientOrigins, ...configuredClientOrigins])];
+
+const isAllowedOrigin = (origin) => !origin || allowedClientOrigins.includes(origin);
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`CORS blocked origin: ${origin}`));
+  },
+  credentials: true,
+};
+
 app.set("trust proxy", 1);
-app.use(express.json());
+app.disable("x-powered-by");
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  next();
+});
+app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || "100kb" }));
 app.use(cookieParser());
 
 app.use(
@@ -27,10 +64,7 @@ app.use(
 app.use((req, res, next) => {
   if (req.path.startsWith("/api/ingest")) return next();
 
-  return cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-  })(req, res, next);
+  return cors(corsOptions)(req, res, next);
 });
 
 app.use("/api/ingest", ingestLimiter);

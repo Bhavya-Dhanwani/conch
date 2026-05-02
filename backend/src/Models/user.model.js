@@ -16,8 +16,26 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required() {
+        return !this.githubId;
+      },
       select: false,
+    },
+    githubId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
+    githubUsername: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    githubAvatarUrl: {
+      type: String,
+      trim: true,
+      default: "",
     },
     role: {
       type: String,
