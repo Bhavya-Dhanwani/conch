@@ -6,12 +6,33 @@ import allRoutes from "./Routes/index.js";
 import globalErrorHandler from "./Middlewares/globalError.middleware.js";
 
 const app = express();
+const defaultClientOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:3002",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3001",
+  "http://127.0.0.1:3002",
+  "http://localhost:5173",
+];
+const allowedClientOrigins = (process.env.CLIENT_URL || defaultClientOrigins.join(","))
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 app.set("trust proxy", 1);
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin(origin, callback) {
+      if (!origin || allowedClientOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`CORS blocked origin: ${origin}`));
+    },
     credentials: true,
   }),
 );
