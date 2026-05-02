@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "CONCH - Root Cause Incident Command",
+  title: "CONCH - Chat-Driven Website Builder",
   description:
-    "CONCH detects website errors, surfaces the root cause, assigns response teams, supports dev chat with AI, and generates postmortems.",
+    "CONCH lets teams build full websites through conversation with live AI-generated layouts, components, and page previews.",
 };
 
 export default function RootLayout({ children }) {
