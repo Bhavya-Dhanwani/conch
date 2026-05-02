@@ -37,26 +37,6 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
-    githubAccessToken: {
-      type: String,
-      select: false,
-    },
-    githubId: {
-      type: String,
-      unique: true,
-      sparse: true,
-      trim: true,
-    },
-    githubUsername: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-    githubAvatarUrl: {
-      type: String,
-      trim: true,
-      default: "",
-    },
     role: {
       type: String,
       enum: ["MANAGER", "EMPLOYEE"],
@@ -86,7 +66,6 @@ const userSchema = new mongoose.Schema(
     toJSON: {
       transform(doc, ret) {
         delete ret.password;
-        delete ret.githubAccessToken;
         delete ret.__v;
         return ret;
       },
@@ -94,7 +73,6 @@ const userSchema = new mongoose.Schema(
     toObject: {
       transform: (doc, ret) => {
         delete ret.password;
-        delete ret.githubAccessToken;
         delete ret.__v;
         return ret;
       },
