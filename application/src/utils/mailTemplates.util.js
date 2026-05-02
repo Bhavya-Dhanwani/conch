@@ -8,7 +8,7 @@ export const VERIFICATION_TEMPLATE = `
 </head>
 <body style="
   background-color: #0D1117;
-  color: #FFFFFF;
+  color: #f2f0ed;
   font-family: 'Arial', sans-serif;
   max-width: 600px;
   margin: 0 auto;
@@ -20,7 +20,7 @@ export const VERIFICATION_TEMPLATE = `
     text-align: center;
     border-radius: 10px 10px 0 0;
   ">
-    <h1 style="margin: 0; color: #FFFFFF;">Email Verification</h1>
+    <h1 style="margin: 0; color: #f2f0ed;">Email Verification</h1>
   </div>
 
   <div style="
@@ -30,7 +30,7 @@ export const VERIFICATION_TEMPLATE = `
     box-shadow: 0 0 15px rgba(155, 89, 182, 0.3);
   ">
     <p style="color: #A0A0A0;">Hey there,</p>
-    <p style="color: #FFFFFF;">Thanks for connecting with <strong>Bhavyaz Portfolio</strong>!  
+    <p style="color: #f2f0ed;">Thanks for connecting with <strong>Bhavyaz Portfolio</strong>!  
     To verify your email address, please use the code below:</p>
 
     <div style="text-align: center; margin: 30px 0;">
@@ -44,7 +44,7 @@ export const VERIFICATION_TEMPLATE = `
 
     <p style="color: #A0A0A0;">Enter this code to confirm your identity. The code expires in 1 hour.</p>
     <p style="color: #A0A0A0;">If this wasn’t you, please ignore this message.</p>
-    <p style="color: #FFFFFF;">Warm regards,<br><strong>Bhavya Dhanwani</strong><br>Bhavyaz Portfolio</p>
+    <p style="color: #f2f0ed;">Warm regards,<br><strong>Bhavya Dhanwani</strong><br>Bhavyaz Portfolio</p>
   </div>
 
   <p style="text-align: center; color: #7A7A7A; margin-top: 20px; font-size: 0.8em;">
@@ -64,7 +64,7 @@ export const WELCOME_TEMPLATE = `
 </head>
 <body style="
   background-color: #0D1117;
-  color: #FFFFFF;
+  color: #f2f0ed;
   font-family: Arial, sans-serif;
   max-width: 600px;
   margin: 0 auto;
@@ -76,7 +76,7 @@ export const WELCOME_TEMPLATE = `
     text-align: center;
     border-radius: 10px 10px 0 0;
   ">
-    <h1 style="margin: 0; color: #FFFFFF;">Welcome Aboard 👋</h1>
+    <h1 style="margin: 0; color: #f2f0ed;">Welcome Aboard 👋</h1>
   </div>
 
   <div style="
@@ -86,13 +86,13 @@ export const WELCOME_TEMPLATE = `
     box-shadow: 0 0 15px rgba(155, 89, 182, 0.3);
   ">
     <p style="color: #A0A0A0;">Hi {name},</p>
-    <p style="color: #FFFFFF;">Welcome to <strong>Bhavyaz Portfolio</strong> — a creative space where I share my work, projects, and passion for development.</p>
+    <p style="color: #f2f0ed;">Welcome to <strong>Bhavyaz Portfolio</strong> — a creative space where I share my work, projects, and passion for development.</p>
     <p style="color: #A0A0A0;">Start exploring the portfolio and get inspired by the journey!</p>
 
     <div style="text-align: center; margin: 30px 0;">
       <a href="{dashboardURL}" style="
         background: linear-gradient(135deg, #1E90FF, #9B59B6);
-        color: white;
+        color: #f2f0ed;
         padding: 12px 20px;
         border-radius: 5px;
         text-decoration: none;
@@ -101,7 +101,7 @@ export const WELCOME_TEMPLATE = `
       ">Visit Portfolio</a>
     </div>
 
-    <p style="color: #FFFFFF;">Glad to have you here,<br><strong>Bhavya Dhanwani</strong></p>
+    <p style="color: #f2f0ed;">Glad to have you here,<br><strong>Bhavya Dhanwani</strong></p>
   </div>
 
   <p style="text-align: center; color: #7A7A7A; margin-top: 20px; font-size: 0.8em;">
@@ -121,7 +121,7 @@ export const FORGOT_PASSWORD_TEMPLATE = `
 </head>
 <body style="
   background-color: #0D1117;
-  color: #FFFFFF;
+  color: #f2f0ed;
   font-family: Arial, sans-serif;
   max-width: 600px;
   margin: 0 auto;
@@ -133,7 +133,7 @@ export const FORGOT_PASSWORD_TEMPLATE = `
     text-align: center;
     border-radius: 10px 10px 0 0;
   ">
-    <h1 style="margin: 0; color: #FFFFFF;">Password Reset Request</h1>
+    <h1 style="margin: 0; color: #f2f0ed;">Password Reset Request</h1>
   </div>
 
   <div style="
@@ -143,13 +143,13 @@ export const FORGOT_PASSWORD_TEMPLATE = `
     box-shadow: 0 0 15px rgba(155, 89, 182, 0.3);
   ">
     <p style="color: #A0A0A0;">Hi there,</p>
-    <p style="color: #FFFFFF;">A password reset was requested for your <strong>Bhavyaz Portfolio</strong> account.</p>
+    <p style="color: #f2f0ed;">A password reset was requested for your <strong>Bhavyaz Portfolio</strong> account.</p>
     <p style="color: #A0A0A0;">If this was you, click the button below to reset it:</p>
 
     <div style="text-align: center; margin: 30px 0;">
       <a href="{resetURL}" style="
         background: linear-gradient(135deg, #1E90FF, #9B59B6);
-        color: white;
+        color: #f2f0ed;
         padding: 12px 20px;
         border-radius: 5px;
         text-decoration: none;
@@ -160,7 +160,7 @@ export const FORGOT_PASSWORD_TEMPLATE = `
 
     <p style="color: #A0A0A0;">This link will expire in 1 hour.  
     If you didn’t request this, you can safely ignore it.</p>
-    <p style="color: #FFFFFF;">Thanks,<br><strong>Bhavya Dhanwani</strong></p>
+    <p style="color: #f2f0ed;">Thanks,<br><strong>Bhavya Dhanwani</strong></p>
   </div>
 
   <p style="text-align: center; color: #7A7A7A; margin-top: 20px; font-size: 0.8em;">
@@ -180,7 +180,7 @@ export const RESET_PASSWORD_TEMPLATE = `
 </head>
 <body style="
   background-color: #0D1117;
-  color: #FFFFFF;
+  color: #f2f0ed;
   font-family: Arial, sans-serif;
   max-width: 600px;
   margin: 0 auto;
@@ -192,7 +192,7 @@ export const RESET_PASSWORD_TEMPLATE = `
     text-align: center;
     border-radius: 10px 10px 0 0;
   ">
-    <h1 style="margin: 0; color: #FFFFFF;">Password Reset Successful</h1>
+    <h1 style="margin: 0; color: #f2f0ed;">Password Reset Successful</h1>
   </div>
 
   <div style="
@@ -202,12 +202,12 @@ export const RESET_PASSWORD_TEMPLATE = `
     box-shadow: 0 0 15px rgba(155, 89, 182, 0.3);
   ">
     <p style="color: #A0A0A0;">Hello,</p>
-    <p style="color: #FFFFFF;">Your password for <strong>Bhavyaz Portfolio</strong> has been successfully updated.</p>
+    <p style="color: #f2f0ed;">Your password for <strong>Bhavyaz Portfolio</strong> has been successfully updated.</p>
 
     <div style="text-align: center; margin: 30px 0;">
       <div style="
         background: linear-gradient(135deg, #1E90FF, #9B59B6);
-        color: white;
+        color: #f2f0ed;
         width: 60px;
         height: 60px;
         line-height: 60px;
@@ -223,7 +223,7 @@ export const RESET_PASSWORD_TEMPLATE = `
       <li>Keep your credentials private</li>
     </ul>
 
-    <p style="color: #FFFFFF;">Stay creative,<br><strong>Bhavya Dhanwani</strong><br>Bhavyaz Portfolio</p>
+    <p style="color: #f2f0ed;">Stay creative,<br><strong>Bhavya Dhanwani</strong><br>Bhavyaz Portfolio</p>
   </div>
 
   <p style="text-align: center; color: #7A7A7A; margin-top: 20px; font-size: 0.8em;">
