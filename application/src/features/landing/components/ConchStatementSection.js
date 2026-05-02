@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import vectorMark from "../../../assets/svg/Vector 1.svg";
+import ConchModelViewer from "./ConchModelViewer";
 import styles from "./ConchStatementSection.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -217,6 +218,8 @@ export default function ConchStatementSection() {
             website command platform.
           </span>
         </h2>
+
+        <ConchModelViewer className={styles.modelViewer} />
       </div>
     </section>
   );
