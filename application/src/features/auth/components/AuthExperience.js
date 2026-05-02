@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import axios from "axios";
 import { useMemo, useState } from "react";
 import Logo from "@/shared/components/Logo/Logo";
@@ -152,7 +153,7 @@ function FloatingCard({ variant, className = "" }) {
   );
 }
 
-function SignupOnboardingArt({ activeIndex = 0 }) {
+function SignupOnboardingArt({ activeIndex = 0, onStepSelect }) {
   const flowStyle = {
     "--rail-shift": `${activeIndex * -112}px`,
     "--rail-shift-mobile": `${activeIndex * -84}px`,
@@ -160,19 +161,32 @@ function SignupOnboardingArt({ activeIndex = 0 }) {
   const icons = ["👋", "👨‍💻", "👀", "🛠️", "🚀", "✓"];
 
   return (
-    <div className={styles.signupArt} style={flowStyle} aria-hidden="true">
+    <div className={styles.signupArt} style={flowStyle} aria-label="Signup progress">
       <div className={styles.iconRailMask}>
         <div className={styles.iconRail}>
-          {icons.map((icon, index) => (
-            <div
-              className={`${styles.railBubble} ${
-                index === activeIndex + 1 ? styles.railBubbleMain : ""
-              }`}
-              key={`${icon}-${index}`}
-            >
-              {icon}
-            </div>
-          ))}
+          {icons.map((icon, index) => {
+            const stepIndex = Math.max(0, Math.min(index - 1, signupSteps.length - 1));
+            const isActive = index === activeIndex + 1;
+            const canGoBack = stepIndex < activeIndex;
+
+            return (
+              <button
+                className={`${styles.railBubble} ${isActive ? styles.railBubbleMain : ""}`}
+                key={`${icon}-${index}`}
+                type="button"
+                aria-label={canGoBack ? `Back to ${signupSteps[stepIndex].id}` : undefined}
+                aria-current={isActive ? "step" : undefined}
+                disabled={!canGoBack}
+                onClick={() => {
+                  if (canGoBack) {
+                    onStepSelect(stepIndex);
+                  }
+                }}
+              >
+                {icon}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -378,6 +392,16 @@ export default function AuthExperience({ mode = "login" }) {
                   ? "Create account"
                   : "Continue"}
             </button>
+            <a className={styles.signupGithubButton} href={githubUrl}>
+              <Image
+                src="/github-mark.svg"
+                alt=""
+                width={26}
+                height={26}
+                className={styles.oauthMark}
+              />
+              Sign in with GitHub
+            </a>
             {signupTouched && signupStepError ? (
               <p className={styles.signupError}>{signupStepError}</p>
             ) : null}
@@ -389,7 +413,17 @@ export default function AuthExperience({ mode = "login" }) {
           </div>
         </form>
 
-        <SignupOnboardingArt activeIndex={signupStep} />
+        <SignupOnboardingArt
+          activeIndex={signupStep}
+          onStepSelect={(stepIndex) => {
+            setSignupStep(stepIndex);
+            setSignupTouched(false);
+            setServerMessage("");
+            if (status !== "idle") {
+              setStatus("idle");
+            }
+          }}
+        />
 
         <p className={styles.bottomSignin}>
           Already have an account? <Link href="/login">Login</Link>
@@ -422,7 +456,13 @@ export default function AuthExperience({ mode = "login" }) {
           className={styles.oauthButton}
           href={githubUrl}
         >
-          <span className={styles.oauthMark}>GH</span>
+          <Image
+            src="/github-mark.svg"
+            alt=""
+            width={26}
+            height={26}
+            className={styles.oauthMark}
+          />
           Continue with GitHub
         </a>
 

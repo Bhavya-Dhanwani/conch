@@ -15,10 +15,11 @@ const defaultClientOrigins = [
   "http://127.0.0.1:3002",
   "http://localhost:5173",
 ];
-const allowedClientOrigins = (process.env.CLIENT_URL || defaultClientOrigins.join(","))
+const configuredClientOrigins = (process.env.CLIENT_URL || "")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
+const allowedClientOrigins = [...new Set([...defaultClientOrigins, ...configuredClientOrigins])];
 
 app.set("trust proxy", 1);
 app.use(express.json());

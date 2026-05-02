@@ -149,7 +149,12 @@ export default function ConchStatementSection() {
   }, [markSvg.path]);
 
   return (
-    <section className={styles.statementSection} ref={sectionRef} aria-label="What CONCH does">
+    <section
+      className={styles.statementSection}
+      id="deploy"
+      ref={sectionRef}
+      aria-label="What CONCH does"
+    >
       <svg
         className={styles.drawingMark}
         viewBox={markSvg.viewBox}
