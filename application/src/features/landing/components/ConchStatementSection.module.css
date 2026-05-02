@@ -1,0 +1,154 @@
+.statementSection {
+  position: relative;
+  overflow: hidden;
+  color: #f2f0ed;
+  background:
+    radial-gradient(circle at 50% 18%, rgb(50 50 50 / 72%) 0 18%, transparent 42%),
+    #101010;
+  isolation: isolate;
+}
+
+.drawingMark {
+  position: absolute;
+  top: 2%;
+  right: clamp(-260px, -16vw, -140px);
+  z-index: 0;
+  width: clamp(920px, 94vw, 1320px);
+  height: auto;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.statementSection::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(16 16 16 / 0%) 0%, rgb(16 16 16 / 58%) 24%, rgb(16 16 16 / 0%) 54%),
+    radial-gradient(circle at 52% 50%, rgb(50 50 50 / 50%) 0 16%, transparent 42%);
+  filter: blur(18px);
+}
+
+.statementInner {
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  display: grid;
+  align-content: center;
+  gap: clamp(54px, 7vw, 92px);
+  padding: clamp(120px, 13vw, 180px) 32px clamp(90px, 10vw, 140px);
+}
+
+.heroLine {
+  max-width: 1180px;
+  color: #f2f0ed;
+  font-size: clamp(58px, 9vw, 156px);
+  font-weight: 820;
+  line-height: 0.93;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.heroLine span {
+  display: block;
+  color: #323232;
+  transition: color 180ms ease;
+}
+
+.heroLine span.heroLineTouched {
+  color: #2563eb;
+}
+
+.copyBlock {
+  display: grid;
+  gap: clamp(34px, 4vw, 56px);
+  font-size: clamp(26px, 3.5vw, 48px);
+  font-weight: 430;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.copyBlock p {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.copyBlock strong {
+  font-weight: 820;
+}
+
+.highlight,
+.highlightWide {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+  padding: 0 0.12em;
+  color: #fff;
+  font-size: 0.88em;
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.highlight::before,
+.highlightWide::before {
+  content: "";
+  position: absolute;
+  inset: 56% -0.14em 8%;
+  z-index: -1;
+  background: #323232;
+  border-radius: 999px;
+  transform: rotate(-1.5deg);
+  transition: background 180ms ease;
+}
+
+.highlightWide::before {
+  inset-inline: -0.2em;
+  transform: rotate(1deg);
+}
+
+.highlightTouched::before {
+  background: #2563eb;
+}
+
+@media (max-width: 760px) {
+  .drawingMark {
+    top: 24%;
+    right: -78vw;
+    width: 190vw;
+  }
+
+  .statementInner {
+    gap: 48px;
+    padding: 110px 20px 90px;
+  }
+
+  .heroLine {
+    font-size: clamp(44px, 15vw, 88px);
+  }
+
+  .copyBlock {
+    gap: 34px;
+    font-size: clamp(25px, 8vw, 40px);
+    line-height: 1.18;
+  }
+}
+
+@media (max-width: 420px) {
+  .statementInner {
+    padding-inline: 18px;
+  }
+
+  .copyBlock {
+    font-size: clamp(23px, 7.4vw, 32px);
+  }
+
+  .highlight,
+  .highlightWide {
+    white-space: normal;
+  }
+}
