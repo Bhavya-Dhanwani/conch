@@ -26,6 +26,10 @@ body[data-theme="dark"] {
     linear-gradient(180deg, #070809 0%, #101215 52%, #070809 100%);
 }
 
+*::-webkit-scrollbar {
+  display: none;
+}
+
 html {
   min-height: 100%;
   overflow-y: auto;
