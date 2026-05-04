@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "npm --prefix application run dev",
     "build": "npm --prefix application run build",
+    "postbuild": "node scripts/prepare-vercel-next-output.cjs",
     "start": "npm --prefix application run start",
     "lint": "npm --prefix application run lint"
   },

@@ -3,6 +3,6 @@
   "framework": "nextjs",
   "outputDirectory": ".next",
   "installCommand": "if [ -f next.config.mjs ]; then npm install; elif [ -f application/package.json ]; then npm --prefix application install; else npm install; fi",
-  "buildCommand": "if [ -f next.config.mjs ]; then npm run build; elif [ -f application/package.json ]; then npm --prefix application run build && cp -R application/.next .next; else npm run build; fi",
+  "buildCommand": "npm run build",
   "devCommand": "if [ -f next.config.mjs ]; then npm run dev; elif [ -f application/package.json ]; then npm --prefix application run dev; else npm run dev; fi"
 }
