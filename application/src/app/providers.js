@@ -43,10 +43,7 @@ function AuthRouteGuard({ children }) {
     if (isProtectedRoute && !isAuthenticated) {
       const nextPath = formatLoginNextParam(getCurrentPathWithSearch(pathname));
       router.replace(`/login?next=${nextPath}`);
-      return;
-    }
-
-    if (isAuthRoute && isAuthenticated) {
+    } else if (isAuthRoute && isAuthenticated) {
       router.replace(getRedirectTarget());
     }
   }, [isAuthenticated, isAuthRoute, isCheckingAuth, isProtectedRoute, pathname, router]);
