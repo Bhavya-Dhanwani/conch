@@ -31,6 +31,12 @@ const getInitials = (value = "DP") =>
     .map((part) => part[0]?.toUpperCase())
     .join("") || "DP";
 
+const normalizeUrl = (value = "") => {
+  const cleanValue = value.trim();
+  if (!cleanValue) return "";
+  return /^https?:\/\//i.test(cleanValue) ? cleanValue : `https://${cleanValue}`;
+};
+
 function Icon({ type }) {
   const paths = {
     deploy: "M10 2l6 4v7l-6 5-6-5V6l6-4Zm0 3L6.5 7.1v4.6L10 14l3.5-2.3V7.1L10 5Zm0 2.8 2 1.2-2 1.2L8 9l2-1.2Z",
@@ -458,7 +464,7 @@ export default function DeploymentInterface() {
         <section className={styles.projectGrid}>
           {projects.length ? (
             projects.map((project) => {
-              const liveUrl = project.liveUrl || project.previewUrl || `https://${project.defaultDomain}`;
+              const liveUrl = normalizeUrl(project.liveUrl || project.previewUrl || project.defaultDomain || "");
 
               return (
                 <article className={styles.deployCard} key={project._id}>
@@ -476,9 +482,13 @@ export default function DeploymentInterface() {
                   </div>
                   <div className={styles.urlBox}>
                     <Icon type="link" />
-                    <a href={liveUrl} target="_blank" rel="noreferrer">
-                      {liveUrl.replace("https://", "")}
-                    </a>
+                    {liveUrl ? (
+                      <a href={liveUrl} target="_blank" rel="noreferrer">
+                        {liveUrl.replace(/^https?:\/\//i, "")}
+                      </a>
+                    ) : (
+                      <span>Preview URL not ready</span>
+                    )}
                   </div>
                   {project.customDomain ? <p className={styles.customDomain}>Custom: {project.customDomain}</p> : null}
                   <div className={styles.cardActions}>

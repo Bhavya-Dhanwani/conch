@@ -12,6 +12,12 @@ const backendApi = createBackendApi();
 const getErrorMessage = (error) =>
   error?.response?.data?.message || error?.message || "Something went wrong";
 
+const normalizeUrl = (value = "") => {
+  const cleanValue = value.trim();
+  if (!cleanValue) return "";
+  return /^https?:\/\//i.test(cleanValue) ? cleanValue : `https://${cleanValue}`;
+};
+
 function Icon({ type }) {
   const paths = {
     arrow: "M4 10h12M9 5l-5 5 5 5",
@@ -54,7 +60,7 @@ export default function DeploymentDetailInterface({ projectId }) {
 
   const liveUrl = useMemo(() => {
     if (!project) return "";
-    return project.liveUrl || project.previewUrl || (project.defaultDomain ? `https://${project.defaultDomain}` : "");
+    return normalizeUrl(project.liveUrl || project.previewUrl || project.defaultDomain || "");
   }, [project]);
 
   const loadDeployment = useCallback(async () => {
@@ -227,7 +233,7 @@ export default function DeploymentDetailInterface({ projectId }) {
               <p>{project.repository?.fullName}</p>
               <div className={styles.previewUrlBox}>
                 <Icon type="link" />
-                <span>{liveUrl ? liveUrl.replace("https://", "") : "Preview URL not ready"}</span>
+                <span>{liveUrl ? liveUrl.replace(/^https?:\/\//i, "") : "Preview URL not ready"}</span>
               </div>
               <div className={styles.detailLinks}>
                 {liveUrl ? (
@@ -292,7 +298,12 @@ export default function DeploymentDetailInterface({ projectId }) {
                   [...project.deployments].reverse().slice(0, 8).map((run) => (
                     <div key={run._id}>
                       <span>{run.status}</span>
-                      <strong>{run.deploymentUrl || project.defaultDomain}</strong>
+                      <strong>
+                        {normalizeUrl(run.deploymentUrl || project.defaultDomain || "").replace(
+                          /^https?:\/\//i,
+                          "",
+                        ) || "URL not available"}
+                      </strong>
                       <small>{formatDate(run.queuedAt)}</small>
                     </div>
                   ))
