@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import allRoutes from "./Routes/index.js";
+import pingRouter from "./Routes/ping.route.js";
 import {
   authLimiter,
   generalApiLimiter,
@@ -54,6 +55,8 @@ app.use((req, res, next) => {
 });
 app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || "100kb" }));
 app.use(cookieParser());
+
+app.use(["/ping", "/api/ping"], pingRouter);
 
 app.use(
   "/api/ingest",
