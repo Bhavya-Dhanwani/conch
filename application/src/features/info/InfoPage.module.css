@@ -1,0 +1,224 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 112px 24px 72px;
+  color: var(--foreground);
+  background: var(--page-background);
+}
+
+.glow {
+  position: absolute;
+  inset: 8% auto auto 50%;
+  width: min(680px, 86vw);
+  aspect-ratio: 1.7 / 1;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 42%, rgb(37 99 235 / 18%), transparent 68%);
+  filter: blur(42px);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.header,
+.hero,
+.steps,
+.cardGrid,
+.band,
+.contactPanel {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(48px, 7vw, 86px);
+}
+
+.hero {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.hero span,
+.stepCard span,
+.band span {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 900px;
+  font-size: clamp(44px, 6vw, 82px);
+  font-weight: 760;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.hero p {
+  max-width: 720px;
+  color: color-mix(in srgb, var(--foreground) 72%, var(--accent));
+  font-size: clamp(17px, 2vw, 22px);
+  line-height: 1.5;
+}
+
+.steps,
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: clamp(44px, 7vw, 82px);
+}
+
+.stepCard,
+.infoCard {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-height: 260px;
+  padding: 24px;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, transparent);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  box-shadow: 0 24px 70px rgb(23 23 23 / 8%);
+  backdrop-filter: blur(18px);
+}
+
+.stepCard h2,
+.infoCard h2,
+.band h2 {
+  font-size: clamp(24px, 2.8vw, 34px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.stepCard p,
+.infoCard p,
+.band p {
+  color: color-mix(in srgb, var(--foreground) 68%, var(--accent));
+  line-height: 1.55;
+}
+
+.stepCard pre {
+  overflow: auto;
+  margin-top: auto;
+  padding: 16px;
+  border: 1px solid rgb(248 247 243 / 10%);
+  border-radius: 14px;
+  color: #f8f7f3;
+  background: #101010;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.stepCard code {
+  font-family: var(--font-geist-mono), "Courier New", monospace;
+}
+
+.band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: clamp(28px, 4vw, 42px);
+  padding: 30px;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  box-shadow: 0 24px 70px rgb(23 23 23 / 8%);
+}
+
+.band div {
+  display: grid;
+  gap: 10px;
+  max-width: 780px;
+}
+
+.band a {
+  min-height: 52px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  border-radius: 999px;
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-size: 14px;
+  font-weight: 760;
+}
+
+.contactPanel {
+  display: grid;
+  gap: 22px;
+  max-width: 760px;
+  margin-top: clamp(44px, 7vw, 76px);
+  padding: 30px;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  box-shadow: 0 24px 70px rgb(23 23 23 / 8%);
+  text-align: center;
+}
+
+.contactPanel div {
+  display: grid;
+  gap: 10px;
+}
+
+.contactPanel span {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.contactPanel a {
+  color: var(--foreground);
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 760;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.contactPanel p {
+  color: color-mix(in srgb, var(--foreground) 68%, var(--accent));
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .steps,
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .band {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 92px 16px 48px;
+  }
+
+  .header {
+    margin-bottom: 38px;
+  }
+
+  .stepCard,
+  .infoCard,
+  .band,
+  .contactPanel {
+    border-radius: 18px;
+    padding: 20px;
+  }
+}

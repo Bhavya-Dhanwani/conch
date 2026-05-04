@@ -1,5 +1,5 @@
 {
-  "name": "conch",
+  "name": "@mrdhanwani/conch",
   "version": "0.1.0",
   "description": "Lightweight JS SDK to capture runtime errors and send them to Conch backend.",
   "type": "module",

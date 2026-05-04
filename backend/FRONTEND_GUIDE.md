@@ -465,7 +465,7 @@ clientSdk
 Frontend/user app me use:
 
 ```js
-import { initConch, captureException } from "@conch/client-sdk";
+import { initConch, captureException } from "@mrdhanwani/conch";
 
 initConch({
   apiKey: "conch_xxxxx",

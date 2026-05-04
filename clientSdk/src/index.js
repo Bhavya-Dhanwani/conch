@@ -1,5 +1,5 @@
 const DEFAULT_ENDPOINT = "/api/ingest/event";
-const SDK_NAME = "@conch/client-sdk";
+const SDK_NAME = "@mrdhanwani/conch";
 const SDK_VERSION = "0.1.0";
 const MAX_TEXT_LENGTH = 12000;
 

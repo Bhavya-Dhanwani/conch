@@ -89,7 +89,12 @@ export default function ProcessStepsSection() {
   }, []);
 
   return (
-    <section className={styles.processSection} ref={sectionRef} aria-label="CONCH process steps">
+    <section
+      className={styles.processSection}
+      id="command-room"
+      ref={sectionRef}
+      aria-label="CONCH process steps"
+    >
       <div className={styles.processStage}>
         <div className={styles.stepStack}>
           {steps.map((step, index) => (

@@ -5,13 +5,13 @@ JavaScript SDK for sending runtime errors to the Conch backend.
 ## Install
 
 ```bash
-npm install @conch/client-sdk
+npm install @mrdhanwani/conch
 ```
 
 ## Basic Usage
 
 ```js
-import { initConch, captureException } from "@conch/client-sdk";
+import { initConch, captureException } from "@mrdhanwani/conch";
 
 initConch({
   apiKey: "conch_xxxxx",

@@ -19,17 +19,20 @@ import styles from "./Navbar.module.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const navItems = [
-  { label: "Docs", href: "/#docs" },
+  { label: "Docs", href: "/docs" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
   { label: "Use Template", href: "/create" },
-  { label: "AI Builder", href: "/create" },
-  { label: "Deploy", href: "/#deploy" },
 ];
 
 const secondaryItems = [
+  { label: "About", href: "/about" },
+  { label: "Docs", href: "/docs" },
+  { label: "Contact", href: "/contact" },
   { label: "Templates", href: "/create" },
   { label: "Builder", href: "/create" },
-  { label: "Deployment", href: "/#deploy" },
-  { label: "Support", href: "/#docs" },
+  { label: "Deployment", href: "/dashboard/deployments" },
+  { label: "Support", href: "/docs" },
 ];
 
 export default function Navbar() {
@@ -185,7 +188,12 @@ export default function Navbar() {
               ))}
             </div>
 
-            <Link className={styles.logoLink} href="/" aria-label="CONCH home">
+            <Link
+              className={styles.logoLink}
+              href="/"
+              aria-label="CONCH home"
+              data-nav-logo-target="primary"
+            >
               <Logo revealOnHover />
             </Link>
 
@@ -301,16 +309,36 @@ export default function Navbar() {
             >
               <span>Socials</span>
               <div>
-                <a href="#youtube" aria-label="YouTube">
+                <a
+                  href="https://www.youtube.com/@bhavya_the_dev"
+                  aria-label="YouTube"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <YoutubeIcon className={styles.socialIcon} />
                 </a>
-                <a href="#linkedin" aria-label="LinkedIn">
+                <a
+                  href="https://www.linkedin.com/in/bhavya-dhanwani/"
+                  aria-label="LinkedIn"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <LinkedinIcon className={styles.socialIcon} />
                 </a>
-                <a href="#instagram" aria-label="Instagram">
+                <a
+                  href="https://www.instagram.com/bhavya_dhanwani__/"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <InstagramIcon className={styles.socialIcon} />
                 </a>
-                <a href="#x" aria-label="X">
+                <a
+                  href="https://x.com/BhavyaDhan24029"
+                  aria-label="X"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <XIcon className={styles.socialIcon} />
                 </a>
               </div>

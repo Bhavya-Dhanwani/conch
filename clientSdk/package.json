@@ -1,5 +1,5 @@
 {
-  "name": "@conch/client-sdk",
+  "name": "@mrdhanwani/conch",
   "version": "0.1.0",
   "description": "Client SDK for capturing JavaScript runtime errors and sending them to Conch backend.",
   "type": "module",

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { orbitImages, orbitRings } from "../data/landingContent";
@@ -146,7 +147,7 @@ export default function HeroSection() {
         <p>CONCH</p>
         <h1>Web Action Clear User Success</h1>
         <div className={styles.actions}>
-          <a href="#signal">Start Trace</a>
+          <Link href="/create">Start Building</Link>
           <a href="#command-room">Explore Flow</a>
         </div>
       </div>

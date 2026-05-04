@@ -9,17 +9,20 @@ import styles from "./LandingFooter.module.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const footerLinks = [
-  { label: "Signal", href: "#signal" },
+  { label: "Start Building", href: "/create" },
+  { label: "Docs", href: "/docs" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
   { label: "Incident Flow", href: "#incident-flow" },
   { label: "Command Room", href: "#command-room" },
   { label: "Postmortem", href: "#postmortem" },
 ];
 
 const socialLinks = [
-  { label: "LinkedIn", href: "#linkedin" },
-  { label: "Instagram", href: "#instagram" },
-  { label: "YouTube", href: "#youtube" },
-  { label: "X", href: "#x" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/bhavya-dhanwani/" },
+  { label: "Instagram", href: "https://www.instagram.com/bhavya_dhanwani__/" },
+  { label: "YouTube", href: "https://www.youtube.com/@bhavya_the_dev" },
+  { label: "X", href: "https://x.com/BhavyaDhan24029" },
 ];
 
 export default function LandingFooter() {
@@ -88,7 +91,7 @@ export default function LandingFooter() {
           <div>
             <h3>Social</h3>
             {socialLinks.map((link) => (
-              <a href={link.href} key={link.href}>
+              <a href={link.href} key={link.href} target="_blank" rel="noreferrer">
                 {link.label}
               </a>
             ))}

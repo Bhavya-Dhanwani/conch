@@ -115,7 +115,7 @@ export default function FeaturesSection() {
   }, []);
 
   return (
-    <section className={styles.featuresSection} ref={sectionRef}>
+    <section className={styles.featuresSection} id="signal" ref={sectionRef}>
       <div className={styles.featuresStage}>
         <h2 className={styles.featuresTitle} ref={titleRef}>
           Making things 
