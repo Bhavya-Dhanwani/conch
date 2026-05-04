@@ -6,6 +6,9 @@ const appRoot = path.dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   outputFileTracingRoot: appRoot,
+  turbopack: {
+    root: appRoot,
+  },
 };
 
 export default nextConfig;
