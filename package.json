@@ -1,5 +1,10 @@
 {
+  "name": "conch",
   "private": true,
+  "packageManager": "npm@11.10.1",
+  "workspaces": [
+    "application"
+  ],
   "scripts": {
     "dev": "npm --prefix application run dev",
     "build": "npm --prefix application run build",
