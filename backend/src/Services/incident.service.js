@@ -3,13 +3,25 @@ import mongoose from "mongoose";
 import Incidents from "../Models/incident.model.js";
 import Logs from "../Models/log.model.js";
 import Projects from "../Models/project.model.js";
+import Teams from "../Models/team.model.js";
 import Users from "../Models/user.model.js";
 import { AppError } from "../Utilities/appError.js";
-import { generateIncidentPostmortem } from "./ai.service.js";
+import {
+  generateIncidentPostmortem,
+  generateIncidentTimelinePlan,
+} from "./ai.service.js";
 import { getProjectForUser } from "./project.service.js";
 
 const activeStatuses = ["OPEN", "INVESTIGATING", "IDENTIFIED", "MONITORING"];
-const editableFields = ["title", "description", "severity", "status", "publicStatus"];
+const editableFields = [
+  "title",
+  "description",
+  "severity",
+  "status",
+  "publicStatus",
+  "timelinePlan",
+  "managerNotes",
+];
 
 const validateObjectId = (value, label) => {
   if (!mongoose.isValidObjectId(value)) {
@@ -74,9 +86,22 @@ const createTimelineEntry = (type, message, author, metadata = {}) => ({
 const populateIncident = (query) => {
   return query
     .populate("responders", "name email role work")
+    .populate("assignedTeam", "name focus members")
     .populate("updates.author", "name email role")
     .populate("timeline.author", "name email role")
     .populate("sourceLog");
+};
+
+const validateTeamForOwner = async (owner, teamId) => {
+  if (!teamId) return null;
+  validateObjectId(teamId, "team id");
+
+  const team = await Teams.findOne({ _id: teamId, owner }).lean();
+  if (!team) {
+    throw new AppError("Team not found for this manager", 404);
+  }
+
+  return team;
 };
 
 export const createIncident = async (user, payload = {}) => {
@@ -89,6 +114,9 @@ export const createIncident = async (user, payload = {}) => {
     publicStatus = "DEGRADED",
     sourceLog,
     responders = [],
+    assignedTeam,
+    timelinePlan,
+    managerNotes = "",
   } = payload;
 
   if (!title?.trim()) {
@@ -106,6 +134,16 @@ export const createIncident = async (user, payload = {}) => {
   }
 
   const responderIds = await validateTeamUsers(project.owner, responders);
+  const team = await validateTeamForOwner(project.owner, assignedTeam);
+  const sourceLogDoc = sourceLog
+    ? await Logs.findOne({ _id: sourceLog, projectId: project._id }).lean()
+    : null;
+  const nextTimelinePlan = Array.isArray(timelinePlan) && timelinePlan.length
+    ? timelinePlan
+    : await generateIncidentTimelinePlan({
+        incident: { title, description, severity },
+        log: sourceLogDoc,
+      });
 
   const incident = await Incidents.create({
     projectId: project._id,
@@ -117,6 +155,9 @@ export const createIncident = async (user, payload = {}) => {
     status,
     publicStatus,
     responders: responderIds,
+    assignedTeam: team?._id || null,
+    timelinePlan: nextTimelinePlan,
+    managerNotes,
     timeline: [
       createTimelineEntry("CREATED", "Incident created", user, {
         severity,
@@ -172,6 +213,26 @@ export const updateIncident = async (user, incidentId, payload = {}) => {
   }
 
   Object.assign(incident, updatePayload);
+  await incident.save();
+
+  return populateIncident(Incidents.findById(incident._id)).lean();
+};
+
+export const assignTeam = async (user, incidentId, teamId) => {
+  const incident = await getIncidentForUser(user, incidentId);
+  const team = await validateTeamForOwner(incident.owner, teamId);
+
+  incident.assignedTeam = team._id;
+  incident.responders = [...new Set([
+    ...incident.responders.map((id) => String(id)),
+    ...team.members.map((id) => String(id)),
+  ])];
+  incident.timeline.push(
+    createTimelineEntry("RESPONDER_ASSIGNED", `${team.name} assigned`, user, {
+      team: team._id,
+      responders: team.members,
+    }),
+  );
   await incident.save();
 
   return populateIncident(Incidents.findById(incident._id)).lean();

@@ -1,8 +1,9 @@
 import { Server } from "socket.io";
 
 import Users from "./Models/user.model.js";
-import { createProjectMessage } from "./Services/chat.service.js";
+import { createProjectMessage, createTeamMessage } from "./Services/chat.service.js";
 import { getProjectForUser } from "./Services/project.service.js";
+import { getTeamForUser } from "./Services/team.service.js";
 import { verifyToken } from "./Utilities/jwtokenGenerator.js";
 
 const getTokenFromSocket = (socket) => {
@@ -21,11 +22,26 @@ const getTokenFromSocket = (socket) => {
 };
 
 const projectRoom = (projectId) => `project:${projectId}:chat`;
+const teamRoom = (teamId) => `team:${teamId}:chat`;
 
 export const initializeSocket = (server) => {
+  const defaultClientOrigins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+    "http://127.0.0.1:3002",
+    "http://localhost:5173",
+  ];
+  const configuredClientOrigins = (process.env.CLIENT_URL || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   const io = new Server(server, {
     cors: {
-      origin: process.env.CLIENT_URL || "http://localhost:5173",
+      origin: [...new Set([...defaultClientOrigins, ...configuredClientOrigins])],
       credentials: true,
     },
   });
@@ -85,6 +101,49 @@ export const initializeSocket = (server) => {
 
         io.to(projectRoom(projectId)).emit("project_chat:new_message", {
           projectId,
+          message: chatMessage,
+        });
+
+        callback?.({
+          success: true,
+          message: chatMessage,
+        });
+      } catch (error) {
+        callback?.({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    socket.on("team_chat:join", async ({ teamId } = {}, callback) => {
+      try {
+        await getTeamForUser(socket.user, teamId);
+        socket.join(teamRoom(teamId));
+
+        callback?.({
+          success: true,
+          room: teamRoom(teamId),
+        });
+      } catch (error) {
+        callback?.({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
+    socket.on("team_chat:leave", ({ teamId } = {}, callback) => {
+      socket.leave(teamRoom(teamId));
+      callback?.({ success: true });
+    });
+
+    socket.on("team_chat:message", async ({ teamId, message } = {}, callback) => {
+      try {
+        const chatMessage = await createTeamMessage(socket.user, teamId, message);
+
+        io.to(teamRoom(teamId)).emit("team_chat:new_message", {
+          teamId,
           message: chatMessage,
         });
 

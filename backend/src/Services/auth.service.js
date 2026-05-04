@@ -2,7 +2,7 @@ import Users from "../Models/user.model.js";
 import mongoose from "mongoose";
 import crypto from "crypto";
 import { AppError } from "../Utilities/appError.js";
-import { generateToken } from "../Utilities/jwtokenGenerator.js";
+import { generateToken, verifyToken } from "../Utilities/jwtokenGenerator.js";
 import { generateHash, compareHash } from "../Utilities/generateHash.js";
 import sendEmail from "../Utilities/sendEmail.js";
 
@@ -14,6 +14,10 @@ const editableEmployeeFields = [
 ];
 
 const sanitizeUser = (user) => user.toObject();
+const sanitizeEmployeeWithInvite = (user, invite = {}) => ({
+  ...sanitizeUser(user),
+  invite,
+});
 const normalizeEmail = (email) => email?.trim().toLowerCase();
 const normalizeName = (name) => name?.trim();
 const escapeHtml = (value = "") =>
@@ -38,7 +42,15 @@ const getClientRedirectUrl = () => {
   );
 };
 
-export const getGithubAuthorizationUrl = () => {
+const getGithubScopes = (isConnection = false) => {
+  if (isConnection) {
+    return process.env.GITHUB_CONNECT_SCOPES || process.env.GITHUB_OAUTH_SCOPES || "read:user user:email repo";
+  }
+
+  return process.env.GITHUB_OAUTH_SCOPES || "read:user user:email";
+};
+
+const buildGithubAuthorizationUrl = ({ state, isConnection = false } = {}) => {
   const clientId = process.env.GITHUB_CLIENT_ID;
   const redirectUri = process.env.GITHUB_CALLBACK_URL;
 
@@ -49,11 +61,34 @@ export const getGithubAuthorizationUrl = () => {
   const params = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirectUri,
-    scope: process.env.GITHUB_OAUTH_SCOPES || "read:user user:email",
+    scope: getGithubScopes(isConnection),
     allow_signup: "true",
   });
 
+  if (state) {
+    params.set("state", state);
+  }
+
   return `https://github.com/login/oauth/authorize?${params.toString()}`;
+};
+
+export const getGithubAuthorizationUrl = () => buildGithubAuthorizationUrl();
+
+export const getGithubConnectionAuthorizationUrl = (user) => {
+  if (!user?._id) {
+    throw new AppError("Please login to connect GitHub", 401);
+  }
+
+  const state = generateToken(
+    {
+      purpose: "github-connect",
+      userId: user._id,
+      role: user.role,
+    },
+    "10m",
+  );
+
+  return buildGithubAuthorizationUrl({ state, isConnection: true });
 };
 
 const fetchGithubAccessToken = async (code) => {
@@ -130,6 +165,8 @@ export const loginWithGithub = async (code) => {
     githubId: String(githubUser.id),
     githubUsername: githubUser.login || "",
     githubAvatarUrl: githubUser.avatar_url || "",
+    githubEmail: email,
+    githubAccessToken: accessToken,
   };
 
   if (!user) {
@@ -148,6 +185,60 @@ export const loginWithGithub = async (code) => {
   }
 
   return createAuthPayload(user);
+};
+
+export const connectGithubAccount = async (code, state) => {
+  if (!code) {
+    throw new AppError("Missing GitHub authorization code", 400);
+  }
+
+  if (!state) {
+    throw new AppError("Missing GitHub connection state", 400);
+  }
+
+  let decoded;
+  try {
+    decoded = verifyToken(state).data;
+  } catch {
+    throw new AppError("GitHub connection expired. Please try again.", 401);
+  }
+
+  if (decoded.purpose !== "github-connect" || !decoded.userId) {
+    throw new AppError("Invalid GitHub connection state", 401);
+  }
+
+  const accessToken = await fetchGithubAccessToken(code);
+  const githubUser = await fetchGithubJson("https://api.github.com/user", accessToken);
+  const email = await getGithubPrimaryEmail(accessToken, githubUser.email);
+  const githubId = String(githubUser.id);
+
+  if (!email) {
+    throw new AppError("GitHub account does not expose a verified email", 400);
+  }
+
+  const conflictingUser = await Users.findOne({
+    githubId,
+    _id: { $ne: decoded.userId },
+  }).lean();
+
+  if (conflictingUser) {
+    throw new AppError("This GitHub account is already connected to another CONCH user", 409);
+  }
+
+  const user = await Users.findById(decoded.userId);
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  user.githubId = githubId;
+  user.githubUsername = githubUser.login || "";
+  user.githubAvatarUrl = githubUser.avatar_url || "";
+  user.githubEmail = email;
+  user.githubAccessToken = accessToken;
+
+  await user.save();
+
+  return sanitizeUser(user);
 };
 
 export { getClientRedirectUrl };
@@ -195,11 +286,8 @@ const getEmployeeUpdatePayload = (employeeData) => {
     );
   }
 
-  if (
-    updatePayload.employmentEndsAt === null ||
-    updatePayload.employmentEndsAt === ""
-  ) {
-    throw new AppError("employmentEndsAt is required for employee TTL", 400);
+  if (updatePayload.employmentEndsAt === "") {
+    updatePayload.employmentEndsAt = null;
   }
 
   return updatePayload;
@@ -249,7 +337,7 @@ export const loginUser = async ({ email, password } = {}) => {
 };
 
 export const createEmployee = async (manager, employeeData = {}) => {
-  const { name, email, work, employmentStartsAt, employmentEndsAt } =
+  const { name, email, work, employmentStartsAt, employmentEndsAt = null } =
     employeeData;
   const normalizedName = normalizeName(name);
   const normalizedEmail = normalizeEmail(email);
@@ -260,10 +348,6 @@ export const createEmployee = async (manager, employeeData = {}) => {
 
   if (!normalizedName || !normalizedEmail) {
     throw new AppError("Employee name and email are required", 400);
-  }
-
-  if (!employmentEndsAt) {
-    throw new AppError("employmentEndsAt is required for employee TTL", 400);
   }
 
   const existingUser = await Users.findOne({ email: normalizedEmail });
@@ -278,9 +362,12 @@ export const createEmployee = async (manager, employeeData = {}) => {
     role: "EMPLOYEE",
     managerId: manager._id,
     work,
-    employmentStartsAt,
-    employmentEndsAt,
+    employmentStartsAt: employmentStartsAt || null,
+    employmentEndsAt: employmentEndsAt || null,
   });
+
+  let emailQueued = true;
+  let emailError = "";
 
   try {
     await sendEmail(
@@ -293,15 +380,16 @@ export const createEmployee = async (manager, employeeData = {}) => {
         <p>Please login and keep these credentials safe.</p>`,
     );
   } catch (error) {
+    emailQueued = false;
+    emailError = error.message;
     console.error("Employee email send failed:", error.message);
-    await Users.findByIdAndDelete(employee._id);
-    throw new AppError(
-      "Employee email send failed. Employee was not created.",
-      500,
-    );
   }
 
-  return sanitizeUser(employee);
+  return sanitizeEmployeeWithInvite(employee, {
+    emailQueued,
+    emailError,
+    temporaryPassword: emailQueued ? undefined : password,
+  });
 };
 
 export const getEmployees = async (manager) => {

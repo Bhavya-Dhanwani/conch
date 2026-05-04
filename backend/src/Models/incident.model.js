@@ -71,6 +71,21 @@ const postmortemSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const timelinePlanSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true, trim: true },
+    description: { type: String, trim: true, default: "" },
+    owner: { type: String, trim: true, default: "Unassigned" },
+    status: {
+      type: String,
+      enum: ["TODO", "IN_PROGRESS", "DONE"],
+      default: "TODO",
+    },
+    dueInMinutes: { type: Number, default: 30 },
+  },
+  { _id: true, timestamps: { createdAt: true, updatedAt: false } },
+);
+
 const incidentSchema = new mongoose.Schema(
   {
     projectId: {
@@ -123,6 +138,20 @@ const incidentSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    assignedTeam: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Team",
+      default: null,
+    },
+    timelinePlan: {
+      type: [timelinePlanSchema],
+      default: [],
+    },
+    managerNotes: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     updates: {
       type: [updateSchema],
       default: [],

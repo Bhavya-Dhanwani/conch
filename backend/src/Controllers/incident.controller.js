@@ -65,6 +65,20 @@ export const assignResponders = catchAsync(async (req, res) => {
   });
 });
 
+export const assignTeam = catchAsync(async (req, res) => {
+  const incident = await incidentServices.assignTeam(
+    req.user,
+    req.params.incidentId,
+    req.body.teamId,
+  );
+
+  return res.status(200).json({
+    success: true,
+    message: "Team assigned successfully",
+    incident,
+  });
+});
+
 export const addIncidentUpdate = catchAsync(async (req, res) => {
   const incident = await incidentServices.addIncidentUpdate(
     req.user,

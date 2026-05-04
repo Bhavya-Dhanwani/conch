@@ -8,6 +8,7 @@ authRouter
   .post("/signup", controller.signup)
   .post("/login", controller.login)
   .get("/github", controller.githubAuthorize)
+  .get("/github/connect", isAuthenticated, controller.githubConnectAuthorize)
   .get("/github/callback", controller.githubCallback)
   .get("/me", isAuthenticated, controller.getMe)
   .post("/logout", controller.logout);

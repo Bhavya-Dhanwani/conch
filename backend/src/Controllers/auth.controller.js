@@ -31,8 +31,18 @@ export const githubAuthorize = catchAsync(async (req, res) => {
   return res.redirect(authServices.getGithubAuthorizationUrl());
 });
 
+export const githubConnectAuthorize = catchAsync(async (req, res) => {
+  return res.redirect(authServices.getGithubConnectionAuthorizationUrl(req.user));
+});
+
 export const githubCallback = catchAsync(async (req, res) => {
-  const { user, token } = await authServices.loginWithGithub(req.query.code);
+  if (req.query.state) {
+    await authServices.connectGithubAccount(req.query.code, req.query.state);
+
+    return res.redirect(`${authServices.getClientRedirectUrl()}/dashboard?github=connected`);
+  }
+
+  const { token } = await authServices.loginWithGithub(req.query.code);
 
   sendAuthCookie(res, token);
 

@@ -12,6 +12,7 @@ incidentRouter.get("/project/:projectId", controller.getProjectIncidents);
 incidentRouter.get("/:incidentId", controller.getIncidentById);
 incidentRouter.patch("/:incidentId", controller.updateIncident);
 incidentRouter.post("/:incidentId/responders", controller.assignResponders);
+incidentRouter.post("/:incidentId/team", controller.assignTeam);
 incidentRouter.post("/:incidentId/updates", controller.addIncidentUpdate);
 incidentRouter.post("/:incidentId/postmortem", controller.generatePostmortem);
 

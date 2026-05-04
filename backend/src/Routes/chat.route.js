@@ -12,4 +12,9 @@ chatRouter
   .get(controller.getProjectMessages)
   .post(controller.createProjectMessage);
 
+chatRouter
+  .route("/teams/:teamId/messages")
+  .get(controller.getTeamMessages)
+  .post(controller.createTeamMessage);
+
 export default chatRouter;

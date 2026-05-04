@@ -153,7 +153,7 @@ export default function Navbar() {
     };
   }, [isMenuOpen]);
 
-  if (pathname === "/create") {
+  if (pathname === "/create" || pathname === "/dashboard") {
     return null;
   }
 
