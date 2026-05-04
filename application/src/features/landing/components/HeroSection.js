@@ -145,7 +145,7 @@ export default function HeroSection() {
 
       <div className={styles.center} onMouseEnter={boostOrbit}>
         <p>CONCH</p>
-        <h1>Web Action Clear User Success</h1>
+        <h1>All in one platform for Web developers</h1>
         <div className={styles.actions}>
           <Link href="/create">Start Building</Link>
           <a href="#command-room">Explore Flow</a>

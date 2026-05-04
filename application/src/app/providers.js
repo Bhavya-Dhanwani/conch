@@ -9,7 +9,7 @@ import { createBackendApi } from "@/shared/config/api";
 import { useAppSelector } from "@/store/hooks";
 
 const backendApi = createBackendApi();
-const protectedRoutePrefixes = ["/dashboard", "/create"];
+const protectedRoutePrefixes = ["/dashboard"];
 const authRoutes = new Set(["/login", "/signup"]);
 
 function getCurrentPathWithSearch(pathname) {
@@ -47,15 +47,22 @@ function AuthRouteGuard({ children }) {
     }
   }, [isAuthenticated, isAuthRoute, isCheckingAuth, isProtectedRoute, pathname, router]);
 
-  if ((isProtectedRoute || isAuthRoute) && isCheckingAuth) {
-    return null;
+  if (isProtectedRoute && isCheckingAuth) {
+    return (
+      <main className="route-loading-shell" role="status" aria-live="polite">
+        <div>
+          <span />
+          <p>Opening workspace...</p>
+        </div>
+      </main>
+    );
   }
 
   if (isProtectedRoute && !isAuthenticated) {
     return null;
   }
 
-  if (isAuthRoute && isAuthenticated) {
+  if (isAuthRoute && isAuthenticated && !isCheckingAuth) {
     return null;
   }
 

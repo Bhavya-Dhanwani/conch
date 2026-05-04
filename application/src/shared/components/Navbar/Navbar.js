@@ -22,7 +22,7 @@ const navItems = [
   { label: "Docs", href: "/docs" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
-  { label: "Use Template", href: "/create" },
+  { label: "Start Building", href: "/create" },
 ];
 
 const secondaryItems = [

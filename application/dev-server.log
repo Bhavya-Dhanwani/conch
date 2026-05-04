@@ -2,24 +2,3 @@
 > application@0.1.0 dev
 > next dev --hostname 127.0.0.1 -p 3000
 
-▲ Next.js 16.2.4 (Turbopack)
-- Local:         http://127.0.0.1:3000
-- Network:       http://127.0.0.1:3000
-- Environments: .env
-✓ Ready in 491ms
-Creating turbopack project { dir: 'D:\\Kodex\\collabs\\conch\\application', testMode: true }
-
- GET / 200 in 593ms (next.js: 203ms, application-code: 389ms)
- GET /signup 404 in 440ms (next.js: 388ms, application-code: 51ms)
- HEAD / 200 in 74ms (next.js: 5ms, application-code: 69ms)
-✓ Compiled in 45ms
- GET /signup 404 in 135ms (next.js: 97ms, application-code: 37ms)
- GET /signup 404 in 141ms (next.js: 4ms, application-code: 138ms)
- GET / 200 in 130ms (next.js: 98ms, application-code: 32ms)
-✓ Compiled in 10ms
-✓ Compiled in 14ms
- GET /signup 404 in 130ms (next.js: 78ms, application-code: 53ms)
- GET /signup 404 in 149ms (next.js: 6ms, application-code: 142ms)
- GET / 200 in 131ms (next.js: 98ms, application-code: 33ms)
-✓ Compiled in 8ms
-[?25h

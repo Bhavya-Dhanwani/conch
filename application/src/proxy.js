@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const protectedRoutePrefixes = ["/dashboard", "/create"];
+const protectedRoutePrefixes = ["/dashboard"];
 const authRoutes = new Set(["/login", "/signup"]);
 
 export function proxy(request) {
@@ -26,5 +26,5 @@ export function proxy(request) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/create", "/login", "/signup"],
+  matcher: ["/dashboard/:path*", "/login", "/signup"],
 };
