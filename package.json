@@ -1,4 +1,11 @@
 {
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix application run dev",
+    "build": "npm --prefix application run build",
+    "start": "npm --prefix application run start",
+    "lint": "npm --prefix application run lint"
+  },
   "dependencies": {
     "settings": "^0.1.1"
   }
