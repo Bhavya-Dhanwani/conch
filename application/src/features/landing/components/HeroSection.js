@@ -78,6 +78,7 @@ export default function HeroSection() {
             x,
             y,
             xPercent: -50,
+            yPercent: -50,
             rotation: angle + 90 + image.rotate,
           });
         });
