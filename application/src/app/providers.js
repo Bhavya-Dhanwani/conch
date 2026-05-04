@@ -18,6 +18,10 @@ function getCurrentPathWithSearch(pathname) {
   return `${pathname}${window.location.search || ""}`;
 }
 
+function formatLoginNextParam(path) {
+  return encodeURIComponent(path).replaceAll("%2F", "/");
+}
+
 function getRedirectTarget() {
   if (typeof window === "undefined") return "/dashboard";
 
@@ -37,7 +41,7 @@ function AuthRouteGuard({ children }) {
     if (isCheckingAuth) return;
 
     if (isProtectedRoute && !isAuthenticated) {
-      const nextPath = encodeURIComponent(getCurrentPathWithSearch(pathname));
+      const nextPath = formatLoginNextParam(getCurrentPathWithSearch(pathname));
       router.replace(`/login?next=${nextPath}`);
       return;
     }

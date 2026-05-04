@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 const protectedRoutePrefixes = ["/dashboard"];
 const authRoutes = new Set(["/login", "/signup"]);
 
+function formatLoginNextParam(path) {
+  return encodeURIComponent(path).replaceAll("%2F", "/");
+}
+
 export function proxy(request) {
   const { pathname, search } = request.nextUrl;
   const hasToken = Boolean(request.cookies.get("token")?.value);
@@ -11,7 +15,7 @@ export function proxy(request) {
 
   if (isProtectedRoute && !hasToken) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("next", `${pathname}${search}`);
+    loginUrl.search = `next=${formatLoginNextParam(`${pathname}${search}`)}`;
     return NextResponse.redirect(loginUrl);
   }
 
