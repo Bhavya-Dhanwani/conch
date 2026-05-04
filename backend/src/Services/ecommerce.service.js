@@ -60,11 +60,14 @@ const findOwnedStore = async (user, storeId) => {
   return store;
 };
 
-const findPublicStore = async (storeId) => {
-  requireObjectId(storeId, "store id");
+const findPublicStore = async (storeIdOrSlug) => {
+  const identifier = tidy(storeIdOrSlug, "", 160);
+  const query = mongoose.isValidObjectId(identifier)
+    ? { _id: identifier }
+    : { slug: slugify(identifier) };
 
   const store = await EcommerceStores.findOne({
-    _id: storeId,
+    ...query,
     isActive: true,
   }).lean();
 

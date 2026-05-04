@@ -1,6 +1,7 @@
 import Users from "../Models/user.model.js";
 import DeploymentProjects from "../Models/deploymentProject.model.js";
 import DeploymentLogs from "../Models/deploymentLog.model.js";
+import EcommerceStores from "../Models/ecommerceStore.model.js";
 import { AppError } from "../Utilities/appError.js";
 import mongoose from "mongoose";
 
@@ -461,6 +462,23 @@ export const getPublicDeploymentProject = async (slug) => {
   }
 
   const publicProject = maskDeploymentProject(project);
+  const storeSlugs = [...new Set([
+    defaultSubdomain,
+    slugify(project.name),
+    slugify(project.defaultSubdomain),
+  ].filter(Boolean))];
+  const ecommerceStore = await EcommerceStores.findOne({
+    owner: project.owner,
+    slug: { $in: storeSlugs },
+    isActive: true,
+  })
+    .select("_id name slug description logoUrl theme")
+    .lean();
+
+  if (ecommerceStore) {
+    publicProject.ecommerceStore = ecommerceStore;
+  }
+
   delete publicProject.environmentVariables;
   return publicProject;
 };

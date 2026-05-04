@@ -6,6 +6,7 @@ import styles from "./LandingLoader.module.css";
 
 const MINIMUM_VISIBLE_MS = 1450;
 const MORPH_DURATION_MS = 760;
+const MAXIMUM_VISIBLE_MS = 5200;
 
 function getAssetUrl(asset) {
   if (!asset) return "";
@@ -45,15 +46,50 @@ export default function LandingLoader() {
   useEffect(() => {
     let isMounted = true;
     let loadedCount = 0;
+    let forcedDone = false;
+    let isFinishing = false;
+    let removalTimer;
+    let finishTimer;
     const startedAt = window.performance.now();
+
+    const removeLoader = () => {
+      if (isMounted) {
+        setIsRemoved(true);
+      }
+    };
+
+    const startMorph = () => {
+      if (!isMounted || isFinishing) return;
+      isFinishing = true;
+
+      const target = document.querySelector('[data-nav-logo-target="primary"] img');
+      const targetRect = target?.getBoundingClientRect();
+      const startSize = Math.min(window.innerWidth * 0.34, 148);
+      const targetSize = targetRect?.width || 34;
+
+      if (targetRect) {
+        setMorphStyle({
+          "--loader-x": `${targetRect.left + targetRect.width / 2}px`,
+          "--loader-y": `${targetRect.top + targetRect.height / 2}px`,
+          "--loader-scale": targetSize / startSize,
+        });
+      }
+
+      setPhase("morphing");
+      removalTimer = window.setTimeout(removeLoader, MORPH_DURATION_MS);
+    };
 
     if (!assetUrls.length) {
       window.queueMicrotask(() => {
         if (isMounted) {
           setProgress(100);
+          startMorph();
         }
       });
-      return undefined;
+      return () => {
+        isMounted = false;
+        window.clearTimeout(removalTimer);
+      };
     }
 
     const updateProgress = () => {
@@ -73,43 +109,31 @@ export default function LandingLoader() {
     const finishWhenReady = () => {
       if (!isMounted) return;
 
-      if (loadedCount < assetUrls.length) {
-        window.setTimeout(finishWhenReady, 80);
+      if (loadedCount < assetUrls.length && !forcedDone) {
+        finishTimer = window.setTimeout(finishWhenReady, 80);
         return;
       }
+      if (isFinishing) return;
 
+      setProgress(100);
       const elapsed = window.performance.now() - startedAt;
       const waitTime = Math.max(0, MINIMUM_VISIBLE_MS - elapsed);
 
-      window.setTimeout(() => {
-        if (!isMounted) return;
-
-        const target = document.querySelector('[data-nav-logo-target="primary"] img');
-        const targetRect = target?.getBoundingClientRect();
-        const startSize = Math.min(window.innerWidth * 0.34, 148);
-        const targetSize = targetRect?.width || 34;
-
-        if (targetRect) {
-          setMorphStyle({
-            "--loader-x": `${targetRect.left + targetRect.width / 2}px`,
-            "--loader-y": `${targetRect.top + targetRect.height / 2}px`,
-            "--loader-scale": targetSize / startSize,
-          });
-        }
-
-        setPhase("morphing");
-        window.setTimeout(() => {
-          if (isMounted) {
-            setIsRemoved(true);
-          }
-        }, MORPH_DURATION_MS);
-      }, waitTime);
+      finishTimer = window.setTimeout(startMorph, waitTime);
     };
+
+    const forceTimer = window.setTimeout(() => {
+      forcedDone = true;
+      finishWhenReady();
+    }, MAXIMUM_VISIBLE_MS);
 
     finishWhenReady();
 
     return () => {
       isMounted = false;
+      window.clearTimeout(forceTimer);
+      window.clearTimeout(finishTimer);
+      window.clearTimeout(removalTimer);
       preloaders.forEach((image) => {
         image.onload = null;
         image.onerror = null;

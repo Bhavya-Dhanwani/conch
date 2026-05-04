@@ -288,9 +288,314 @@
   padding: 26px;
 }
 
+.storeSite {
+  min-height: 100vh;
+  color: var(--store-ink);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--store-bg) 86%, #ffffff) 0%, #ffffff 52%),
+    var(--store-bg);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.storeNav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 0 max(22px, calc((100vw - 1120px) / 2));
+  border-bottom: 1px solid color-mix(in srgb, var(--store-ink) 12%, transparent);
+  background: rgb(255 255 255 / 86%);
+  backdrop-filter: blur(18px);
+}
+
+.storeBrand,
+.storeNav nav,
+.storeHero div,
+.productActions,
+.cartRow,
+.cartRow div {
+  display: flex;
+  align-items: center;
+}
+
+.storeBrand {
+  gap: 12px;
+}
+
+.storeBrand span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 10px;
+  color: #ffffff;
+  background: var(--store-accent);
+  font-weight: 900;
+}
+
+.storeBrand img,
+.productMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.storeBrand strong {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.storeNav nav {
+  gap: 18px;
+  color: color-mix(in srgb, var(--store-ink) 76%, #ffffff);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.cartPill,
+.storeHero a,
+.productActions button,
+.categoryTabs button,
+.cartRow button,
+.contactBand button {
+  border: 1px solid color-mix(in srgb, var(--store-accent) 32%, transparent);
+  border-radius: 8px;
+  color: var(--store-ink);
+  background: #ffffff;
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.cartPill,
+.storeHero a,
+.productActions button,
+.categoryTabs button,
+.contactBand button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.storeHero {
+  width: min(1120px, calc(100% - 44px));
+  min-height: 520px;
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  margin: 0 auto;
+  padding: 56px 0;
+}
+
+.storeHero p,
+.storeSectionHeader p,
+.checkoutBand p,
+.contactBand p {
+  color: var(--store-accent);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.storeHero h1 {
+  max-width: 800px;
+  font-size: clamp(46px, 8vw, 96px);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.storeHero > span,
+.checkoutBand span,
+.contactBand span {
+  max-width: 660px;
+  color: color-mix(in srgb, var(--store-ink) 72%, #ffffff);
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.storeHero div {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.storeHero a:first-child,
+.productActions button:last-child,
+.contactBand button {
+  color: #ffffff;
+  background: var(--store-accent);
+}
+
+.catalogSection,
+.checkoutBand,
+.contactBand {
+  width: min(1120px, calc(100% - 44px));
+  margin: 0 auto;
+  padding: 58px 0;
+}
+
+.storeSectionHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.storeSectionHeader h2,
+.checkoutBand h2,
+.contactBand h2 {
+  margin-top: 6px;
+  font-size: clamp(30px, 4vw, 50px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.storeSectionHeader > span {
+  color: color-mix(in srgb, var(--store-ink) 68%, #ffffff);
+  font-weight: 750;
+}
+
+.categoryTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.categoryTabs .activeCategory {
+  color: #ffffff;
+  background: var(--store-ink);
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.productCard {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--store-ink) 12%, transparent);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 16px 42px rgb(15 23 42 / 7%);
+}
+
+.productMedia {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 6px;
+  color: color-mix(in srgb, var(--store-accent) 72%, #ffffff);
+  background: color-mix(in srgb, var(--store-bg) 68%, #ffffff);
+  font-size: 42px;
+  font-weight: 900;
+}
+
+.productCard small {
+  color: var(--store-accent);
+  font-weight: 900;
+}
+
+.productCard h3 {
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.productCard p {
+  color: color-mix(in srgb, var(--store-ink) 70%, #ffffff);
+  line-height: 1.5;
+}
+
+.productMeta,
+.checkoutBand {
+  display: grid;
+  gap: 10px;
+}
+
+.productMeta span {
+  color: color-mix(in srgb, var(--store-ink) 64%, #ffffff);
+  font-size: 13px;
+}
+
+.productActions {
+  gap: 10px;
+}
+
+.productActions button {
+  flex: 1;
+}
+
+.checkoutBand,
+.contactBand {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.7fr);
+  align-items: start;
+  gap: 28px;
+  border-top: 1px solid color-mix(in srgb, var(--store-ink) 10%, transparent);
+}
+
+.cartBox,
+.contactBand form {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--store-ink) 12%, transparent);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.cartRow {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cartRow div {
+  gap: 8px;
+}
+
+.cartRow button {
+  width: 30px;
+  height: 30px;
+}
+
+.cartBox > strong {
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--store-ink) 10%, transparent);
+}
+
+.contactBand {
+  display: grid;
+}
+
+.contactBand input {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid color-mix(in srgb, var(--store-ink) 16%, transparent);
+  border-radius: 8px;
+  color: var(--store-ink);
+  font: inherit;
+}
+
 @media (max-width: 900px) {
   .articleGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .productGrid,
+  .checkoutBand,
+  .contactBand {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -323,5 +628,41 @@
 
   .articleCard {
     min-height: 280px;
+  }
+
+  .storeNav {
+    position: relative;
+    align-items: flex-start;
+    flex-direction: column;
+    padding-block: 16px;
+  }
+
+  .storeNav nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cartPill {
+    width: 100%;
+  }
+
+  .storeHero {
+    min-height: auto;
+    padding-top: 42px;
+  }
+
+  .storeHero > span,
+  .checkoutBand span,
+  .contactBand span {
+    font-size: 16px;
+  }
+
+  .storeSectionHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .productGrid {
+    grid-template-columns: 1fr;
   }
 }
