@@ -45,7 +45,7 @@ body {
 
 body {
   min-height: 100%;
-  overflow-y: clip;
+  overflow-y: visible;
   overscroll-behavior-y: auto;
   touch-action: pan-y;
   color: var(--foreground);

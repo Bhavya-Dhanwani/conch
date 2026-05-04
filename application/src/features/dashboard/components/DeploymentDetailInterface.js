@@ -52,11 +52,10 @@ export default function DeploymentDetailInterface({ projectId }) {
 
   const liveUrl = useMemo(() => {
     if (!project) return "";
-    return project.liveUrl || (project.defaultDomain ? `https://${project.defaultDomain}` : "");
+    return project.liveUrl || project.previewUrl || (project.defaultDomain ? `https://${project.defaultDomain}` : "");
   }, [project]);
   const platformDomain = (process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "bhavyadhanwani.dev").replace(/^\*\./, "");
   const deploymentTarget = process.env.NEXT_PUBLIC_DEPLOYMENT_TARGET || "your deployed frontend/proxy target";
-  const isPlatformDomain = project?.defaultDomain && liveUrl.includes(project.defaultDomain);
 
   const loadDeployment = useCallback(async () => {
     setIsLoading(true);
@@ -106,7 +105,7 @@ export default function DeploymentDetailInterface({ projectId }) {
     try {
       const { data } = await backendApi.post(`/api/deployments/projects/${projectId}/deploy`);
       setProject(data.project);
-      setNotice(`Deployment queued for ${data.project.liveUrl || data.project.defaultDomain}.`);
+      setNotice(`Deployment ready at ${data.project.liveUrl || data.project.previewUrl || data.project.defaultDomain}.`);
       await loadDeployment();
     } catch (requestError) {
       setError(getErrorMessage(requestError));
@@ -227,7 +226,7 @@ export default function DeploymentDetailInterface({ projectId }) {
               <h2>{liveUrl ? liveUrl.replace("https://", "") : "URL not reserved"}</h2>
               <p>{project.repository?.fullName}</p>
               <div className={styles.detailLinks}>
-                {liveUrl && !isPlatformDomain ? (
+                {liveUrl ? (
                   <a href={liveUrl} target="_blank" rel="noreferrer">
                     <Icon type="link" />
                     Visit
@@ -280,7 +279,7 @@ export default function DeploymentDetailInterface({ projectId }) {
                 <dt>Custom domain</dt>
                 <dd>{project.customDomain || "Not connected"}</dd>
                 <dt>URL state</dt>
-                <dd>{project.customDomain ? "Custom domain" : "Reserved until wildcard DNS is configured"}</dd>
+                <dd>{project.customDomain ? "Custom domain" : "Path-based preview is active"}</dd>
               </dl>
             </article>
 
@@ -361,11 +360,11 @@ export default function DeploymentDetailInterface({ projectId }) {
           {!project.customDomain ? (
             <section className={styles.dnsPanel}>
               <div>
-                <span>DNS setup required</span>
-                <h3>Configure wildcard DNS before opening {project.defaultDomain}</h3>
+                <span>Optional DNS setup</span>
+                <h3>Path preview works now. Wildcard DNS is only needed for {project.defaultDomain}</h3>
                 <p>
-                  Your browser shows NXDOMAIN because <strong>*.{platformDomain}</strong> is not pointed to a host yet.
-                  Add this DNS record wherever the domain is managed.
+                  The working preview URL is <strong>{project.previewUrl || liveUrl}</strong>. Add wildcard DNS later
+                  only if you want subdomain URLs like <strong>{project.defaultDomain}</strong>.
                 </p>
               </div>
               <dl>

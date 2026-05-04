@@ -163,7 +163,7 @@ export default function DeploymentInterface() {
     try {
       const { data } = await backendApi.post(`/api/deployments/projects/${projectId}/deploy`);
       setProjects((current) => current.map((project) => (project._id === projectId ? data.project : project)));
-      setNotice(`Deployment queued for ${data.project.liveUrl || data.project.defaultDomain}.`);
+      setNotice(`Deployment ready at ${data.project.liveUrl || data.project.previewUrl || data.project.defaultDomain}.`);
     } catch (requestError) {
       setError(getErrorMessage(requestError));
     } finally {
@@ -455,7 +455,7 @@ export default function DeploymentInterface() {
         <section className={styles.projectGrid}>
           {projects.length ? (
             projects.map((project) => {
-              const liveUrl = project.liveUrl || `https://${project.defaultDomain}`;
+              const liveUrl = project.liveUrl || project.previewUrl || `https://${project.defaultDomain}`;
 
               return (
                 <article className={styles.deployCard} key={project._id}>
@@ -473,13 +473,9 @@ export default function DeploymentInterface() {
                   </div>
                   <div className={styles.urlBox}>
                     <Icon type="link" />
-                    {project.customDomain ? (
-                      <a href={liveUrl} target="_blank" rel="noreferrer">
-                        {liveUrl.replace("https://", "")}
-                      </a>
-                    ) : (
-                      <span>{liveUrl.replace("https://", "")} · DNS pending</span>
-                    )}
+                    <a href={liveUrl} target="_blank" rel="noreferrer">
+                      {liveUrl.replace("https://", "")}
+                    </a>
                   </div>
                   {project.customDomain ? <p className={styles.customDomain}>Custom: {project.customDomain}</p> : null}
                   <div className={styles.cardActions}>

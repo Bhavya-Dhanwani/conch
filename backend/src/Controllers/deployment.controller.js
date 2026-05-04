@@ -31,6 +31,16 @@ export const getDeploymentProject = catchAsync(async (req, res) => {
   });
 });
 
+export const getPublicDeploymentProject = catchAsync(async (req, res) => {
+  const project = await deploymentServices.getPublicDeploymentProject(req.params.slug);
+
+  return res.status(200).json({
+    success: true,
+    message: "Deployed site fetched successfully",
+    project,
+  });
+});
+
 export const deleteDeploymentProject = catchAsync(async (req, res) => {
   await deploymentServices.deleteDeploymentProject(req.user, req.params.projectId);
 

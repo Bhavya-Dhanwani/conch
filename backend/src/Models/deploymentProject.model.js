@@ -166,6 +166,16 @@ const deploymentProjectSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    previewPath: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    previewUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     customDomain: {
       type: String,
       trim: true,

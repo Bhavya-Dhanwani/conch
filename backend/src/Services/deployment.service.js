@@ -38,6 +38,14 @@ const platformDomain = (process.env.PLATFORM_DOMAIN || "bhavyadhanwani.dev")
   .replace(/^\*\./, "")
   .replace(/\/.*$/, "");
 
+const appBaseUrl = (
+  process.env.PUBLIC_APP_URL ||
+  process.env.CLIENT_REDIRECT_URL ||
+  `https://conch.${platformDomain}`
+)
+  .trim()
+  .replace(/\/$/, "");
+
 let repositoryIndexReadyPromise;
 
 const tidy = (value, fallback = "", maxLength = 300) => {
@@ -275,8 +283,12 @@ const buildLiveUrl = (project) => {
     return `https://${project.customDomain}`;
   }
 
-  return `https://${project.defaultSubdomain}.${platformDomain}`;
+  return project.previewUrl || `${appBaseUrl}/site/${project.defaultSubdomain}`;
 };
+
+const buildPreviewPath = (slug) => `/site/${slug}`;
+
+const buildPreviewUrl = (slug) => `${appBaseUrl}${buildPreviewPath(slug)}`;
 
 const analyzeLog = ({ message = "", fileName = "", lineNumber = null } = {}) => {
   const lower = message.toLowerCase();
@@ -426,6 +438,24 @@ export const getDeploymentProject = async (user, projectId) => {
   return maskDeploymentProject(project);
 };
 
+export const getPublicDeploymentProject = async (slug) => {
+  const defaultSubdomain = slugify(slug);
+  const project = await DeploymentProjects.findOne({
+    defaultSubdomain,
+    status: "READY",
+  })
+    .sort({ updatedAt: -1 })
+    .lean();
+
+  if (!project) {
+    throw new AppError("Deployed site not found", 404);
+  }
+
+  const publicProject = maskDeploymentProject(project);
+  delete publicProject.environmentVariables;
+  return publicProject;
+};
+
 export const deleteDeploymentProject = async (user, projectId) => {
   assertValidProjectId(projectId);
 
@@ -460,6 +490,8 @@ export const createDeploymentProject = async (user, payload = {}) => {
   const projectName = tidy(payload.name, repository.fullName.split("/").at(-1), 120);
   const subdomain = await getAvailableSubdomain(owner, payload.defaultSubdomain || projectName);
   const customDomain = normalizeCustomDomain(payload.customDomain);
+  const previewPath = buildPreviewPath(subdomain);
+  const previewUrl = buildPreviewUrl(subdomain);
 
   const project = await DeploymentProjects.create({
     owner,
@@ -485,8 +517,10 @@ export const createDeploymentProject = async (user, payload = {}) => {
     environmentVariables: normalizeEnvironmentVariables(payload.environmentVariables),
     defaultSubdomain: subdomain,
     defaultDomain: `${subdomain}.${platformDomain}`,
+    previewPath,
+    previewUrl,
     customDomain,
-    liveUrl: customDomain ? `https://${customDomain}` : `https://${subdomain}.${platformDomain}`,
+    liveUrl: customDomain ? `https://${customDomain}` : previewUrl,
   });
 
   return maskDeploymentProject(project);

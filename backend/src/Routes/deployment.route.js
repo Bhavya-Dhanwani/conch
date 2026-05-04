@@ -5,6 +5,8 @@ import { isAuthenticated } from "../Middlewares/auth.middleware.js";
 
 const deploymentRouter = express.Router();
 
+deploymentRouter.get("/public/:slug", controller.getPublicDeploymentProject);
+
 deploymentRouter.use(isAuthenticated);
 
 deploymentRouter.get("/github/repos", controller.listGithubRepositories);

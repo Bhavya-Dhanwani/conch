@@ -1,0 +1,147 @@
+.siteShell {
+  min-height: 100vh;
+  color: #101827;
+  background: #f6f9fd;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.hero {
+  min-height: 72vh;
+  display: grid;
+  align-content: space-between;
+  gap: 48px;
+  padding: 28px clamp(18px, 5vw, 72px) 72px;
+  background:
+    linear-gradient(120deg, rgb(15 86 217 / 12%), transparent 45%),
+    linear-gradient(180deg, #ffffff, #eef5ff);
+  border-bottom: 1px solid #d7e5f5;
+}
+
+.hero nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.hero nav strong {
+  font-size: 18px;
+}
+
+.hero a {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d7e5f5;
+  border-radius: 10px;
+  padding: 0 14px;
+  color: #172033;
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.hero section {
+  max-width: 840px;
+  display: grid;
+  gap: 18px;
+}
+
+.hero section span,
+.grid span {
+  color: #0f56d9;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: clamp(52px, 9vw, 112px);
+  line-height: 0.92;
+}
+
+.hero p {
+  max-width: 680px;
+  color: #54657c;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.hero section div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 32px clamp(18px, 5vw, 72px) 54px;
+}
+
+.grid article,
+.errorState,
+.loading {
+  border: 1px solid #d7e5f5;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgb(37 72 112 / 8%);
+}
+
+.grid article {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+}
+
+.grid strong {
+  font-size: 24px;
+  overflow-wrap: anywhere;
+}
+
+.grid p {
+  color: #60708a;
+  line-height: 1.5;
+}
+
+.loading,
+.errorState {
+  width: min(560px, calc(100% - 32px));
+  margin: 18vh auto 0;
+  padding: 26px;
+}
+
+.errorState {
+  display: grid;
+  gap: 12px;
+}
+
+.errorState span {
+  color: #a43222;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.errorState h1 {
+  font-size: 34px;
+}
+
+.errorState p,
+.loading {
+  color: #60708a;
+}
+
+@media (max-width: 780px) {
+  .hero nav,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero nav {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
