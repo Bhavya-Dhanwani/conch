@@ -3,9 +3,8 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import Logo from "@/shared/components/Logo/Logo";
+import { backendBaseUrl } from "@/shared/config/api";
 import styles from "./BuilderInterface.module.css";
-
-const backendBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 
 const readApiResponse = async (response) => {
   const text = await response.text();

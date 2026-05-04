@@ -3,17 +3,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { createBackendApi } from "@/shared/config/api";
 import ConfirmDialog from "./ConfirmDialog";
 import styles from "./DeploymentInterface.module.css";
 
-const backendApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const backendApi = createBackendApi();
 
 const getErrorMessage = (error) =>
   error?.response?.data?.message || error?.message || "Something went wrong";

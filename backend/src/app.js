@@ -20,6 +20,7 @@ const defaultClientOrigins = [
   "http://127.0.0.1:3001",
   "http://127.0.0.1:3002",
   "http://localhost:5173",
+  "http://conch.bhavyadhanwani.dev",
 ];
 const configuredClientOrigins = (process.env.CLIENT_URL || "")
   .split(",")

@@ -2,21 +2,15 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import axios from "axios";
 import { useMemo, useState } from "react";
 import Logo from "@/shared/components/Logo/Logo";
 import { useAppDispatch } from "@/store/hooks";
 import { setAuthError, setAuthStatus, setUser } from "@/shared/state/user/userActions";
+import { createBackendApi } from "@/shared/config/api";
 import styles from "./AuthExperience.module.css";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const backendApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const backendApi = createBackendApi();
 
 const fieldCopy = {
   login: {

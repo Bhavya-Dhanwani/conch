@@ -3,19 +3,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import axios from "axios";
 import { io } from "socket.io-client";
 import Logo from "@/shared/components/Logo/Logo";
 import { useAppSelector } from "@/store/hooks";
+import { backendBaseUrl, createBackendApi } from "@/shared/config/api";
 import styles from "./DashboardInterface.module.css";
 
-const backendApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const backendApi = createBackendApi();
 
 const initialProjectForm = { name: "" };
 const initialTeamForm = {
@@ -434,7 +428,7 @@ export default function DashboardInterface({ view = "overview" }) {
   useEffect(() => {
     if (user?.role !== "EMPLOYEE" || !selectedEmployeeTeamId) return undefined;
 
-    const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080", {
+    const socket = io(backendBaseUrl, {
       withCredentials: true,
       transports: ["websocket", "polling"],
     });
