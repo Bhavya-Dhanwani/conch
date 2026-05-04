@@ -19,7 +19,7 @@ function getCurrentPathWithSearch(pathname) {
 }
 
 function formatLoginNextParam(path) {
-  return encodeURIComponent(path).replaceAll("%2F", "/");
+  return encodeURIComponent(path).replace(/%2F/g, "/");
 }
 
 function getRedirectTarget() {
