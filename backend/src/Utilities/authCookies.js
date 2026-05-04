@@ -1,7 +1,9 @@
+const isProduction = process.env.NODE_ENV === "production";
+
 const authCookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "Lax",
+  secure: isProduction,
+  sameSite: isProduction ? "None" : "Lax",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
@@ -12,7 +14,7 @@ export const sendAuthCookie = (res, token) => {
 export const clearAuthCookie = (res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "Lax",
+    secure: isProduction,
+    sameSite: isProduction ? "None" : "Lax",
   });
 };
