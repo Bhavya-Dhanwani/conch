@@ -9,6 +9,7 @@ const hiddenOnRoutes = new Set(["/login", "/signup", "/create"]);
 export default function NavbarGate() {
   const pathname = usePathname();
   const isDashboardRoute = pathname.startsWith("/dashboard");
+  const isPublicSiteRoute = pathname.startsWith("/site");
 
   useEffect(() => {
     document.body.style.overflow = "";
@@ -24,7 +25,7 @@ export default function NavbarGate() {
     document.body.classList.remove("lenis", "lenis-smooth", "lenis-stopped", "lenis-scrolling");
   }, [pathname]);
 
-  if (hiddenOnRoutes.has(pathname) || isDashboardRoute) {
+  if (hiddenOnRoutes.has(pathname) || isDashboardRoute || isPublicSiteRoute) {
     return null;
   }
 

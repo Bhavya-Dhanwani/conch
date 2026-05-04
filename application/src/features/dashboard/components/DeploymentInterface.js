@@ -34,6 +34,8 @@ const getInitials = (value = "DP") =>
 function Icon({ type }) {
   const paths = {
     deploy: "M10 2l6 4v7l-6 5-6-5V6l6-4Zm0 3L6.5 7.1v4.6L10 14l3.5-2.3V7.1L10 5Zm0 2.8 2 1.2-2 1.2L8 9l2-1.2Z",
+    eye: "M2.5 10s2.8-5 7.5-5 7.5 5 7.5 5-2.8 5-7.5 5-7.5-5-7.5-5Zm7.5 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
+    eyeOff: "M3 3l14 14M7.2 7.3A7.8 7.8 0 0 0 2.5 10s2.8 5 7.5 5c1.1 0 2.1-.3 3-.7M9 5.1c.3 0 .6-.1 1-.1 4.7 0 7.5 5 7.5 5a12 12 0 0 1-2.1 2.7M9.2 9.2a1.2 1.2 0 0 0 1.6 1.6",
     folder: "M3 6h5l1.6 2H17v8H3V6Z",
     github: "M10 2a8 8 0 0 0-2.5 15.6c.4.1.5-.2.5-.4v-1.4c-2 .4-2.5-.8-2.5-.8-.3-.8-.8-1-.8-1-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.6-.2-3.3-.8-3.3-3.6 0-.8.3-1.5.8-2-.1-.2-.4-1 .1-2 0 0 .7-.2 2.1.8.6-.2 1.3-.3 2-.3s1.4.1 2 .3c1.5-1 2.1-.8 2.1-.8.5 1 .2 1.8.1 2 .5.5.8 1.2.8 2 0 2.8-1.7 3.4-3.3 3.6.3.2.5.7.5 1.4v2.1c0 .2.1.5.5.4A8 8 0 0 0 10 2Z",
     grid: "M3 3h5v5H3V3Zm9 0h5v5h-5V3ZM3 12h5v5H3v-5Zm9 0h5v5h-5v-5Z",
@@ -414,14 +416,15 @@ export default function DeploymentInterface() {
                       <option value="production">Production</option>
                       <option value="preview">Preview</option>
                     </select>
-                    <label className={styles.secretToggle}>
-                      <input
-                        checked={variable.isSecret}
-                        onChange={(event) => updateEnvVariable(index, "isSecret", event.target.checked)}
-                        type="checkbox"
-                      />
-                      Secret
-                    </label>
+                    <button
+                      className={styles.eyeToggle}
+                      type="button"
+                      aria-label={variable.isSecret ? "Show value" : "Hide value"}
+                      title={variable.isSecret ? "Show value" : "Hide value"}
+                      onClick={() => updateEnvVariable(index, "isSecret", !variable.isSecret)}
+                    >
+                      <Icon type={variable.isSecret ? "eyeOff" : "eye"} />
+                    </button>
                     <button type="button" onClick={() => removeEnvVariable(index)}>
                       Remove
                     </button>

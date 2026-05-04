@@ -15,6 +15,8 @@ const getErrorMessage = (error) =>
 function Icon({ type }) {
   const paths = {
     arrow: "M4 10h12M9 5l-5 5 5 5",
+    eye: "M2.5 10s2.8-5 7.5-5 7.5 5 7.5 5-2.8 5-7.5 5-7.5-5-7.5-5Zm7.5 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
+    eyeOff: "M3 3l14 14M7.2 7.3A7.8 7.8 0 0 0 2.5 10s2.8 5 7.5 5c1.1 0 2.1-.3 3-.7M9 5.1c.3 0 .6-.1 1-.1 4.7 0 7.5 5 7.5 5a12 12 0 0 1-2.1 2.7M9.2 9.2a1.2 1.2 0 0 0 1.6 1.6",
     github: "M10 2a8 8 0 0 0-2.5 15.6c.4.1.5-.2.5-.4v-1.4c-2 .4-2.5-.8-2.5-.8-.3-.8-.8-1-.8-1-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.6-.2-3.3-.8-3.3-3.6 0-.8.3-1.5.8-2-.1-.2-.4-1 .1-2 0 0 .7-.2 2.1.8.6-.2 1.3-.3 2-.3s1.4.1 2 .3c1.5-1 2.1-.8 2.1-.8.5 1 .2 1.8.1 2 .5.5.8 1.2.8 2 0 2.8-1.7 3.4-3.3 3.6.3.2.5.7.5 1.4v2.1c0 .2.1.5.5.4A8 8 0 0 0 10 2Z",
     link: "M7.5 11.5 12.5 6.5M8.5 5.5l1-1a3 3 0 0 1 4.2 4.2l-1 1M11.5 14.5l-1 1a3 3 0 0 1-4.2-4.2l1-1",
     refresh: "M15 6a6 6 0 1 0 1 5m-1-5V3h3",
@@ -54,8 +56,6 @@ export default function DeploymentDetailInterface({ projectId }) {
     if (!project) return "";
     return project.liveUrl || project.previewUrl || (project.defaultDomain ? `https://${project.defaultDomain}` : "");
   }, [project]);
-  const platformDomain = (process.env.NEXT_PUBLIC_PLATFORM_DOMAIN || "bhavyadhanwani.dev").replace(/^\*\./, "");
-  const deploymentTarget = process.env.NEXT_PUBLIC_DEPLOYMENT_TARGET || "your deployed frontend/proxy target";
 
   const loadDeployment = useCallback(async () => {
     setIsLoading(true);
@@ -223,8 +223,12 @@ export default function DeploymentDetailInterface({ projectId }) {
           <section className={styles.detailHero}>
             <article>
               <span className={styles.statusPill}>{project.status}</span>
-              <h2>{liveUrl ? liveUrl.replace("https://", "") : "URL not reserved"}</h2>
+              <h2>{project.name}</h2>
               <p>{project.repository?.fullName}</p>
+              <div className={styles.previewUrlBox}>
+                <Icon type="link" />
+                <span>{liveUrl ? liveUrl.replace("https://", "") : "Preview URL not ready"}</span>
+              </div>
               <div className={styles.detailLinks}>
                 {liveUrl ? (
                   <a href={liveUrl} target="_blank" rel="noreferrer">
@@ -270,16 +274,14 @@ export default function DeploymentDetailInterface({ projectId }) {
             </article>
 
             <article className={styles.detailCard}>
-              <h3>Domains</h3>
+              <h3>Preview URL</h3>
               <dl>
-                <dt>Platform domain</dt>
-                <dd>{project.defaultDomain}</dd>
-                <dt>Wildcard source</dt>
-                <dd>*.{platformDomain}</dd>
+                <dt>Path preview</dt>
+                <dd>{project.previewPath || "Not ready"}</dd>
+                <dt>Live URL</dt>
+                <dd>{liveUrl || "Not ready"}</dd>
                 <dt>Custom domain</dt>
                 <dd>{project.customDomain || "Not connected"}</dd>
-                <dt>URL state</dt>
-                <dd>{project.customDomain ? "Custom domain" : "Path-based preview is active"}</dd>
               </dl>
             </article>
 
@@ -333,14 +335,15 @@ export default function DeploymentDetailInterface({ projectId }) {
                     <option value="production">Production</option>
                     <option value="preview">Preview</option>
                   </select>
-                  <label className={styles.secretToggle}>
-                    <input
-                      checked={variable.isSecret}
-                      onChange={(event) => updateEnvironmentDraft(index, "isSecret", event.target.checked)}
-                      type="checkbox"
-                    />
-                    Secret
-                  </label>
+                  <button
+                    className={styles.eyeToggle}
+                    type="button"
+                    aria-label={variable.isSecret ? "Show value" : "Hide value"}
+                    title={variable.isSecret ? "Show value" : "Hide value"}
+                    onClick={() => updateEnvironmentDraft(index, "isSecret", !variable.isSecret)}
+                  >
+                    <Icon type={variable.isSecret ? "eyeOff" : "eye"} />
+                  </button>
                   <button type="button" onClick={() => removeEnvironmentDraft(index)}>
                     Remove
                   </button>
@@ -356,31 +359,6 @@ export default function DeploymentDetailInterface({ projectId }) {
               {isSaving === "env" ? "Saving..." : "Save environment variables"}
             </button>
           </section>
-
-          {!project.customDomain ? (
-            <section className={styles.dnsPanel}>
-              <div>
-                <span>Optional DNS setup</span>
-                <h3>Path preview works now. Wildcard DNS is only needed for {project.defaultDomain}</h3>
-                <p>
-                  The working preview URL is <strong>{project.previewUrl || liveUrl}</strong>. Add wildcard DNS later
-                  only if you want subdomain URLs like <strong>{project.defaultDomain}</strong>.
-                </p>
-              </div>
-              <dl>
-                <dt>Type</dt>
-                <dd>CNAME</dd>
-                <dt>Name</dt>
-                <dd>*</dd>
-                <dt>Value</dt>
-                <dd>{deploymentTarget}</dd>
-              </dl>
-              <p>
-                If the root domain uses nameservers from another provider, configure this record there first.
-                After DNS resolves, the platform URLs can become clickable.
-              </p>
-            </section>
-          ) : null}
 
           <section className={styles.fullLogPanel}>
             <div className={styles.logHeader}>

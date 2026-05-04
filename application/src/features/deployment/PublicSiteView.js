@@ -63,38 +63,73 @@ export default function PublicSiteView({ slug }) {
   }
 
   const liveLabel = project.previewUrl || project.liveUrl || project.defaultDomain;
+  const stackLabel = project.detectedFramework || project.framework || "Website";
 
   return (
     <main className={styles.siteShell}>
       <header className={styles.hero}>
         <nav>
           <strong>{project.name}</strong>
-          <a href={project.repository?.htmlUrl || "#"} target="_blank" rel="noreferrer">
-            Repository
-          </a>
-        </nav>
-        <section>
-          <span>{project.detectedFramework || project.framework}</span>
-          <h1>{project.name}</h1>
-          <p>
-            This deployment preview is running from CONCH at {liveLabel?.replace(/^https?:\/\//, "")}.
-          </p>
           <div>
-            <a href={project.repository?.htmlUrl || "#"} target="_blank" rel="noreferrer">
-              View source
-            </a>
-            <a href={`https://${project.defaultDomain}`} target="_blank" rel="noreferrer">
-              Future subdomain
-            </a>
+            <a href="#work">Explore</a>
+            <a href="#contact">Contact</a>
           </div>
+        </nav>
+        <section className={styles.heroContent}>
+          <div>
+            <span>{stackLabel}</span>
+            <h1>{project.name}</h1>
+            <p>
+              A clean, production-ready preview published through CONCH. Use this page as the live
+              path preview while custom domains and build artifacts are connected.
+            </p>
+            <div className={styles.heroActions}>
+              <a href="#work">View preview</a>
+              {project.repository?.htmlUrl ? (
+                <a href={project.repository.htmlUrl} target="_blank" rel="noreferrer">
+                  Source
+                </a>
+              ) : null}
+            </div>
+          </div>
+          <aside className={styles.previewCard}>
+            <span>Live preview</span>
+            <strong>{liveLabel?.replace(/^https?:\/\//, "")}</strong>
+            <p>{project.status} · {project.detectedLanguage || "JavaScript"} · {project.packageManager}</p>
+            <i />
+          </aside>
         </section>
       </header>
 
-      <section className={styles.grid}>
+      <section className={styles.showcase} id="work">
+        <div>
+          <span>Built for launch</span>
+          <h2>{project.name} is ready to shape into the final customer site.</h2>
+        </div>
+        <div className={styles.showcaseGrid}>
+          <article>
+            <strong>01</strong>
+            <h3>Responsive foundation</h3>
+            <p>Structured sections, clean spacing, and a stable preview URL for every deployment.</p>
+          </article>
+          <article>
+            <strong>02</strong>
+            <h3>Deployment metadata</h3>
+            <p>Repository, stack, domain, and build settings are tracked from the deployment dashboard.</p>
+          </article>
+          <article>
+            <strong>03</strong>
+            <h3>Domain upgrade path</h3>
+            <p>Keep path previews today and switch to wildcard subdomains or custom domains later.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className={styles.grid} id="contact">
         <article>
           <span>Status</span>
           <strong>{project.status}</strong>
-          <p>Deployment metadata is ready. A real build artifact renderer can replace this preview shell later.</p>
+          <p>Deployment metadata is ready and available through this path-based preview.</p>
         </article>
         <article>
           <span>Stack</span>
@@ -102,11 +137,16 @@ export default function PublicSiteView({ slug }) {
           <p>{project.packageManager} · {project.rootDirectory}</p>
         </article>
         <article>
-          <span>Domain</span>
+          <span>Future domain</span>
           <strong>{project.defaultDomain}</strong>
           <p>Use wildcard DNS later when you want direct subdomain hosting.</p>
         </article>
       </section>
+
+      <footer className={styles.footer}>
+        <strong>{project.name}</strong>
+        <span>Preview powered by CONCH</span>
+      </footer>
     </main>
   );
 }

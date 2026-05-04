@@ -148,9 +148,18 @@ const normalizeEnvironmentVariables = (variables = [], existingVariables = []) =
 const maskDeploymentProject = (project) => {
   if (!project) return project;
   const plainProject = typeof project.toObject === "function" ? project.toObject() : project;
+  const previewPath = plainProject.defaultSubdomain
+    ? buildPreviewPath(plainProject.defaultSubdomain)
+    : plainProject.previewPath || "";
+  const previewUrl = plainProject.defaultSubdomain
+    ? buildPreviewUrl(plainProject.defaultSubdomain)
+    : plainProject.previewUrl || "";
 
   return {
     ...plainProject,
+    previewPath,
+    previewUrl,
+    liveUrl: plainProject.customDomain ? plainProject.liveUrl : previewUrl,
     environmentVariables: (plainProject.environmentVariables || []).map((variable) => ({
       ...variable,
       value: variable.isSecret ? maskEnvValue(variable.value) : variable.value,
@@ -283,7 +292,7 @@ const buildLiveUrl = (project) => {
     return `https://${project.customDomain}`;
   }
 
-  return project.previewUrl || `${appBaseUrl}/site/${project.defaultSubdomain}`;
+  return buildPreviewUrl(project.defaultSubdomain);
 };
 
 const buildPreviewPath = (slug) => `/site/${slug}`;
