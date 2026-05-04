@@ -39,13 +39,22 @@ const platformDomain = (process.env.PLATFORM_DOMAIN || "bhavyadhanwani.dev")
   .replace(/^\*\./, "")
   .replace(/\/.*$/, "");
 
-const appBaseUrl = (
-  process.env.PUBLIC_APP_URL ||
-  process.env.CLIENT_REDIRECT_URL ||
-  `https://conch.${platformDomain}`
-)
-  .trim()
-  .replace(/\/$/, "");
+const isLocalUrl = (value = "") => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(value);
+
+const getAppBaseUrl = () => {
+  const candidates = [
+    process.env.PUBLIC_APP_URL,
+    process.env.CLIENT_REDIRECT_URL,
+    process.env.CLIENT_APP_URL,
+    process.env.CLIENT_URL?.split(",")[0]?.trim(),
+    `https://conch.${platformDomain}`,
+  ].filter(Boolean);
+
+  const selected = candidates.find((url) => process.env.NODE_ENV !== "production" || !isLocalUrl(url));
+  return (selected || `https://conch.${platformDomain}`).trim().replace(/\/$/, "");
+};
+
+const appBaseUrl = getAppBaseUrl();
 
 let repositoryIndexReadyPromise;
 

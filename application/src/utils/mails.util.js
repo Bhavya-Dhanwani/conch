@@ -7,6 +7,19 @@ import {
   RESET_PASSWORD_TEMPLATE,
 } from "./mailTemplates.util.js";
 
+const isLocalUrl = (value = "") => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(value);
+
+const getClientUrl = () => {
+  const candidates = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    process.env.CLIENT_URL?.split(",")[0]?.trim(),
+    "https://conch.bhavyadhanwani.dev",
+  ].filter(Boolean);
+  const selected = candidates.find((url) => process.env.NODE_ENV !== "production" || !isLocalUrl(url));
+
+  return (selected || "https://conch.bhavyadhanwani.dev").replace(/\/$/, "");
+};
+
 export async function sendVerificationEmail(email, verificationToken) {
   const mailOptions = {
     from: `"Bhavyaz Portfolio" <${process.env.TRANSACTIONAL_DOMAIN}>`,
@@ -29,7 +42,7 @@ export async function sendWelcomeEmail(email, name) {
     subject: "Welcome to Dole Shole",
     html: WELCOME_TEMPLATE.replace("{name}", name).replace(
       "{dashboardURL}",
-      `${process.env.CLIENT_URL}/dashboard`
+      `${getClientUrl()}/dashboard`
     ),
   };
 

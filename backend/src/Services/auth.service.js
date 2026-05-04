@@ -33,13 +33,19 @@ const createAuthPayload = (user) => ({
   user: sanitizeUser(user),
 });
 
+const isLocalUrl = (value = "") => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i.test(value);
+
 const getClientRedirectUrl = () => {
-  return (
-    process.env.CLIENT_REDIRECT_URL ||
-    process.env.CLIENT_APP_URL ||
-    process.env.CLIENT_URL?.split(",")[0]?.trim() ||
-    "http://localhost:3000"
-  );
+  const candidates = [
+    process.env.CLIENT_REDIRECT_URL,
+    process.env.CLIENT_APP_URL,
+    process.env.PUBLIC_APP_URL,
+    process.env.CLIENT_URL?.split(",")[0]?.trim(),
+    "https://conch.bhavyadhanwani.dev",
+  ].filter(Boolean);
+
+  const selected = candidates.find((url) => process.env.NODE_ENV !== "production" || !isLocalUrl(url));
+  return (selected || "https://conch.bhavyadhanwani.dev").replace(/\/$/, "");
 };
 
 const getGithubScopes = (isConnection = false) => {
