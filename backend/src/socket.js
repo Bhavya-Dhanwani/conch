@@ -25,23 +25,9 @@ const projectRoom = (projectId) => `project:${projectId}:chat`;
 const teamRoom = (teamId) => `team:${teamId}:chat`;
 
 export const initializeSocket = (server) => {
-  const defaultClientOrigins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-    "http://127.0.0.1:3002",
-    "http://localhost:5173",
-  ];
-  const configuredClientOrigins = (process.env.CLIENT_URL || "")
-    .split(",")
-    .map((origin) => origin.trim())
-    .filter(Boolean);
-
   const io = new Server(server, {
     cors: {
-      origin: [...new Set([...defaultClientOrigins, ...configuredClientOrigins])],
+      origin: "*",
       credentials: true,
     },
   });
